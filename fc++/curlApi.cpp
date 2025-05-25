@@ -23,7 +23,7 @@ int main(){
 
   do
   {
-    cout << "White your selection 'request test (1)', 'get las request (2)', 'close(0)': \n";
+    cout << "White your selection 'request test (1)', 'get las request (2)', 'Log in (3)', 'Get cookie id (4)', 'Get JWT (5), 'close(0)': \n";
     cin >> options;
 
     switch (options)
@@ -37,9 +37,14 @@ int main(){
       break;
     case 3:
       apiReq.loginPost();
+      apiReq.setJWT();
       break;
     case 4:
       cout << apiReq.GETCookieId() << endl;
+      break;
+    case 5:
+      cout << apiReq.GETJWT() << endl;
+      break;
     case 0: 
       options = 0;
     default:
