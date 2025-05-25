@@ -35,6 +35,11 @@ int main(){
     case 2:
       cout << apiReq.GETLastDataReques() << endl;
       break;
+    case 3:
+      apiReq.loginPost();
+      break;
+    case 4:
+      cout << apiReq.GETCookieId() << endl;
     case 0: 
       options = 0;
     default:
