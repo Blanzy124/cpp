@@ -1,35 +1,41 @@
-#include <websocketpp/websocketpp/config/asio_no_tls_client.hpp>
-#include <websocketpp/websocketpp/client.hpp>
-
+#include <boost/beast/core.hpp>
+#include <boost/beast/websocket.hpp>
+#include <boost/asio/connect.hpp>
+#include <boost/asio/ip/tcp.hpp>
 #include <iostream>
+#include <string>
 
-typedef websocketpp::client<websocketpp::config::asio_client> client;
-
-void on_message(websocketpp::connection_hdl, client::message_ptr msg) {
-    std::cout << "Mensaje recibido: " << msg->get_payload() << std::endl;
-}
+namespace beast = boost::beast;
+namespace websocket = beast::websocket;
+namespace net = boost::asio;
+using tcp = net::ip::tcp;
 
 int main() {
-    client c;
-
     try {
-        c.set_access_channels(websocketpp::log::alevel::none);
-        c.init_asio();
-        c.set_message_handler(&on_message);
+        std::string host = "echo.websocket.org";
+        std::string port = "80";
+        std::string message = "Hola desde Boost.Beast!";
 
-        websocketpp::lib::error_code ec;
-        auto con = c.get_connection("ws://echo.websocket.org", ec);
+        net::io_context ioc;
+        tcp::resolver resolver{ioc};
+        websocket::stream<tcp::socket> ws{ioc};
 
-        if (ec) {
-            std::cout << "Error de conexión: " << ec.message() << std::endl;
-            return 1;
-        }
+        auto const results = resolver.resolve(host, port);
+        net::connect(ws.next_layer(), results);
 
-        c.connect(con);
-        c.run();
-    } catch (std::exception& e) {
-        std::cout << "Excepción: " << e.what() << std::endl;
+        ws.handshake(host, "/");
+        ws.write(net::buffer(message));
+
+        beast::flat_buffer buffer;
+        ws.read(buffer);
+
+        std::cout << "Respuesta del servidor: " << beast::make_printable(buffer.data()) << std::endl;
+
+        ws.close(websocket::close_code::normal);
+    } catch (std::exception const& e) {
+        std::cerr << "Error: " << e.what() << std::endl;
+        return EXIT_FAILURE;
     }
 
-    return 0;
+    return EXIT_SUCCESS;
 }
