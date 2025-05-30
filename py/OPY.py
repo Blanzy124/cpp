@@ -1,0 +1,56 @@
+import sys
+sys.path.append(r"C:/Users/samue/AppData/Local/Programs/Python/Python313/Lib/site-packages")
+
+
+import aiohttp;
+import asyncio;
+import ssl
+import json
+
+class httpsR:
+ cookieId = None
+ JWT = None
+ def __init__(self, user_name, user_password, url, secure):
+  self._user_name = user_name
+  self._user_password = user_password
+  self._url = url
+  self._cookieId = None
+  self._JWT = None
+  self._secure = secure
+
+  @property
+  def cookieId(self):
+   return self._cookieId
+  
+  @property
+  def JWT(self):
+   return self._JWT
+  
+  
+ async def secureSetUp(self):
+   if self._secure == False:
+    req_secure = ssl.create_default_context()
+    req_secure.check_hostname = False
+    req_secure.verify_mode = ssl.CERT_NONE
+    return req_secure
+   else:
+     req_secure = ssl.create_default_context()
+     return None
+  
+ async def logIn(self):
+    print("Login launched")
+    headers = {"Content-Type": "application/json",}
+    body = { "userName" : self._user_name, "userPassword" : self._user_password}
+    bodyj = json.dumps(body)
+    async with aiohttp.ClientSession(self._url) as session:
+      async with session.post("/users/login", data=bodyj ,headers=headers, ssl= await self.secureSetUp()) as res:
+        print("Requesting")
+        print("resp", await res.json())
+        if res.status == 200:
+          resp = await res.json()
+          if resp['ok'] != True:
+            print(resp)
+          else:
+            self._cookieId = resp["data"]['cookieId']
+            print("Login succes")
+        
