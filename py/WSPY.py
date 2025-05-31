@@ -9,8 +9,13 @@ import ssl
 
 async def main():
    httpr = httpsR("cpp", "cpp2005", "https://localhost:8443", False)
-   await httpr.logIn()
-   print(httpr._cookieId)
+   if await httpr.logIn() != True:
+      print("Error, closing")
+      exit()
+   else:
+      print("cookie: ",httpr._cookieId)
+      await httpr.JWTsetUp()
+      print(httpr._JWT)
 asyncio.run(main())
 
 

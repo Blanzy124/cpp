@@ -7,6 +7,15 @@ import asyncio;
 import ssl
 import json
 
+
+def validatedJson(j):
+  try:
+    json.loads(j)
+    return True
+  except (json.JSONDecodeError, TypeError):
+    return False
+      
+
 class httpsR:
  cookieId = None
  JWT = None
@@ -39,18 +48,38 @@ class httpsR:
   
  async def logIn(self):
     print("Login launched")
-    headers = {"Content-Type": "application/json",}
+    headers = {"Content-Type": "application/json"}
     body = { "userName" : self._user_name, "userPassword" : self._user_password}
-    bodyj = json.dumps(body)
     async with aiohttp.ClientSession(self._url) as session:
-      async with session.post("/users/login", data=bodyj ,headers=headers, ssl= await self.secureSetUp()) as res:
+      async with session.post("/users/login", data=json.dumps(body) ,headers=headers, ssl= await self.secureSetUp()) as res:
         print("Requesting")
-        print("resp", await res.json())
         if res.status == 200:
           resp = await res.json()
           if resp['ok'] != True:
             print(resp)
+            return False
           else:
             self._cookieId = resp["data"]['cookieId']
             print("Login succes")
+            return True
+            
+ async def JWTsetUp(self):
+   print("Requesting JWT...")
+   headers = {"Content-Type": "application/json"}
+   body = { "cookieId": self._cookieId }
+   async with aiohttp.ClientSession(self._url) as session:
+     async with session.post("/tokens/jwtrefresh", data=json.dumps(body), headers=headers, ssl= await self.secureSetUp()) as res:
+       if res.status == 200:
+         resp = await res.json()
+         if validatedJson(resp) == True: 
+          if resp['ok'] == False:
+            print(resp)
+            return False
+         else:
+            self._JWT = resp
+            return True
+       else:
+         print("Error: ", resp)
+         
+      
         
