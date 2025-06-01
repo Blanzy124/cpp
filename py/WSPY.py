@@ -1,5 +1,5 @@
-import sys
-sys.path.append(r"C:/Users/samue/AppData/Local/Programs/Python/Python313/Lib/site-packages")
+#import sys
+#sys.path.append(r"C:/Users/samue/AppData/Local/Programs/Python/Python313/Lib/site-packages")
 
 from OPY import httpsR
 from OPY import web_s
