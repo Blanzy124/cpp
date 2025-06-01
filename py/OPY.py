@@ -92,6 +92,8 @@ class web_s:
     self._url = url
     self._JWT = JWT
     self._secure = secure
+    self._from = None
+    self._to = None
   
   
   @property
@@ -108,23 +110,33 @@ class web_s:
       req_secure = ssl.create_default_context()
       return None
   
-  async def ws_connection(self):
+  async def ws_connection(self, input):
     async with aiohttp.ClientSession(self._url) as session:
       async with session.ws_connect(f"/foo?token={self.JWT}", ssl= await self.secureSetUp()) as ws:
-        self._ws_o = ws
-        async for msg in ws:
-          if msg.type == aiohttp.WSMsgType.TEXT:
-            print("This is the IF", msg)
-          else:
-            print(msg)
-  
-  async def ws_o_try(self, action):
-    if action == 1:
-      data_json = json.loads(msg.data)
-      async for msg in self._ws_o:
-          await self._ws_o.send_json(data=json.dumps({ "message": "hola desde python", "from" : "cpp", "to" : f"{data_json["from"]}"}))
-    else: 
-      print("Unkonw")
+        
+        
+        async def receiver():
+            async for msg in ws:
+                if msg.type == aiohttp.WSMsgType.TEXT:
+                    print("Mensaje del servidor:", msg)
+                    msgJ = json.loads(msg.data)
+                    print(msgJ)
+                    self._to = msgJ["from"]
+                    self._from = msgJ["to"]
+                elif msg.type == aiohttp.WSMsgType.CLOSED:
+                    print("WebSocket cerrado por el servidor.")
+                    break
+                elif msg.type == aiohttp.WSMsgType.ERROR:
+                    print("Error en WebSocket:", msg)
+                    break
+        recv_task = asyncio.create_task(receiver())
+
+        while True:
+            data = await input.event_queue.get()
+            body = { "message": data, "from": self._from,  "to": self._to}
+            await ws.send_str(json.dumps(body))
+            print("Evento enviado:", json.dumps(body))
+        await recv_task
 
 
     
