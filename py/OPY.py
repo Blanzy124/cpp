@@ -113,8 +113,6 @@ class web_s:
   async def ws_connection(self, input):
     async with aiohttp.ClientSession(self._url) as session:
       async with session.ws_connect(f"/foo?token={self.JWT}", ssl= await self.secureSetUp()) as ws:
-        
-        
         async def receiver():
             async for msg in ws:
                 if msg.type == aiohttp.WSMsgType.TEXT:
@@ -137,7 +135,3 @@ class web_s:
             await ws.send_str(json.dumps(body))
             print("Evento enviado:", json.dumps(body))
         await recv_task
-
-
-    
-        
