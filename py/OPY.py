@@ -116,7 +116,6 @@ class web_s:
         async def receiver():
             async for msg in ws:
                 if msg.type == aiohttp.WSMsgType.TEXT:
-                    print("Mensaje del servidor:", msg)
                     msgJ = json.loads(msg.data)
                     print(msgJ)
                     self._to = msgJ["from"]
