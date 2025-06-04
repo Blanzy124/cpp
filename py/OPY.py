@@ -101,7 +101,7 @@ class web_s:
     return self._JWT
   
   async def secureSetUp(self):
-    if self._secure == False:
+    if self._secure == False:  
      req_secure = ssl.create_default_context()
      req_secure.check_hostname = False
      req_secure.verify_mode = ssl.CERT_NONE

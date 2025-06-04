@@ -9,14 +9,12 @@ import ssl
 import pygame
 
 class control:
-   _contronModel = None
-   
-   
-   
+
    
    def __init__(self, status):
       self.status = status
       self.event_queue = asyncio.Queue()
+      self._contronModel = None
 
          
    async def actionTake(self):
