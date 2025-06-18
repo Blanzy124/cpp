@@ -1,6 +1,3 @@
-import sys
-sys.path.append(r"C:/Users/samue/AppData/Local/Programs/Python/Python313/Lib/site-packages")
-
 
 import aiohttp;
 import asyncio;
@@ -18,8 +15,6 @@ def validatedJson(j):
       
 
 class httpsR:
- cookieId = None
- JWT = None
  def __init__(self, user_name, user_password, url, secure):
   self._user_name = user_name
   self._user_password = user_password
