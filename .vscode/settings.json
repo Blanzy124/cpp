@@ -96,7 +96,8 @@
   "typeinfo": "cpp",
   "valarray": "cpp",
   "variant": "cpp",
-  "rope": "cpp"
+  "rope": "cpp",
+  "slist": "cpp"
  },
  "C_Cpp.errorSquiggles": "enabled"
 }
