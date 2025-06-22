@@ -1,6 +1,5 @@
 fc++/vcpkg/
 fc++/build/
-fc++/CMakeCache.txt
 fc++/CMakeFiles/
 fc++/cmake_install.cmake
 fc++/Makefile
