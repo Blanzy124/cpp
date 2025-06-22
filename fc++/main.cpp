@@ -52,7 +52,7 @@ int main(){
 
     int l;
     int s;
-
+    cout << "hello to multi-thred in and out \n";
     string address = "";
     string *p_address = &address;
     std::future<int> in = std::async(std::launch::async, getLine, p_address);

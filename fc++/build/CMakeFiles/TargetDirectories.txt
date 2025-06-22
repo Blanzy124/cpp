@@ -1,0 +1,3 @@
+/Users/SamuelBlandon/proyects/cpp/fc++/build/CMakeFiles/async4.dir
+/Users/SamuelBlandon/proyects/cpp/fc++/build/CMakeFiles/edit_cache.dir
+/Users/SamuelBlandon/proyects/cpp/fc++/build/CMakeFiles/rebuild_cache.dir
