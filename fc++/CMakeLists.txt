@@ -11,7 +11,10 @@ set(SOURCES
 	main.cpp
 )
 
+set(VCPKG_MANIFEST_MODE ON)
+
 add_executable(async4 ${SOURCES})
+
 
 target_link_libraries(async4 PRIVATE Boost::boost Boost::system)
 

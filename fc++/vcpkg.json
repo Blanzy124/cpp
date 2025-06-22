@@ -1,0 +1,8 @@
+{
+  "name": "asyn4",
+  "version": "0.0.5",
+  "dependencies": [
+    "boost-beast",
+    "boost-asio"
+  ]
+}
