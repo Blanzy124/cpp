@@ -8,3 +8,5 @@ fc++/Makefile
 *.pdb
 *.o
 *.out
+*.vcxproj*
+*.sln

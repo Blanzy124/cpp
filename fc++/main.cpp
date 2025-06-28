@@ -1,12 +1,13 @@
-#include <boost/beast/core.hpp>
-#include <boost/beast/http.hpp>
-#include <boost/beast/version.hpp>
-#include <boost/asio/connect.hpp>
-#include <boost/asio/ip/tcp.hpp>
+//#include <boost/beast/core.hpp>
+//#include <boost/beast/http.hpp>
+//#include <boost/beast/version.hpp>
+//#include <boost/asio/connect.hpp>
+//#include <boost/asio/ip/tcp.hpp>
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
 #include <string>
+
 #include <future>
 #include <thread>
 #include <chrono>
@@ -17,7 +18,7 @@ using std::cout;
 
 std::mutex mtx;
 
-int show1(string* input){
+void show1(string* input){
     string inputC;
     while (true)
     {
@@ -30,10 +31,10 @@ int show1(string* input){
         }
         mtx.unlock();
     }
-    return 0;
+    return;
 }
 
-int getLine(string* input){
+void getLine(string* input){
     string inputC = "";
     while (true)
     {
@@ -45,19 +46,21 @@ int getLine(string* input){
         }
         mtx.unlock();
     }
-    return 0;
+    return;
     
 }
 int main(){
 
     int l;
     int s;
-    cout << "hello to multi-thred in and out \n";
+    cout << "hello to multi-thred in and out, esto es con los threads \n";
     string address = "";
     string *p_address = &address;
-    std::future<int> in = std::async(std::launch::async, getLine, p_address);
-    std::future<int> show = std::async(std::launch::async, show1, p_address);
-    l = in.get();
-    s = show.get();
+
+    std::thread f1(getLine, p_address);
+    std::thread s2(show1, p_address);
+    f1.join();
+    s2.join();
+    
     return 0;
 }

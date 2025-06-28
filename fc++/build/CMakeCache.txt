@@ -207,6 +207,24 @@ MiProyecto_IS_TOP_LEVEL:STATIC=ON
 //Value Computed by CMake
 MiProyecto_SOURCE_DIR:STATIC=C:/Users/samue/OneDrive/Desktop/Web_from_web/cpp/fc++
 
+//Path to a library.
+OPENSSL_CRYPTO_LIBRARY:FILEPATH=/opt/homebrew/opt/openssl@3/lib/libcrypto.dylib
+
+//Path to a file.
+OPENSSL_INCLUDE_DIR:PATH=/opt/homebrew/opt/openssl@3/include
+
+//No help, variable specified on the command line.
+OPENSSL_ROOT_DIR:UNINITIALIZED=/opt/homebrew/opt/openssl@3
+
+//Path to a library.
+OPENSSL_SSL_LIBRARY:FILEPATH=/opt/homebrew/opt/openssl@3/lib/libssl.dylib
+
+//Arguments to supply to pkg-config
+PKG_CONFIG_ARGN:STRING=
+
+//pkg-config executable
+PKG_CONFIG_EXECUTABLE:FILEPATH=PKG_CONFIG_EXECUTABLE-NOTFOUND
+
 //Automatically copy dependencies into the output directory for
 // executables.
 VCPKG_APPLOCAL_DEPS:BOOL=ON
@@ -283,6 +301,18 @@ async4_IS_TOP_LEVEL:STATIC=ON
 
 //Value Computed by CMake
 async4_SOURCE_DIR:STATIC=C:/Users/samue/OneDrive/Desktop/Web_from_web/cpp/fc++
+
+//Value Computed by CMake
+async4_BINARY_DIR:STATIC=/Users/SamuelBlandon/proyects/cpp/fc++/build
+
+//Value Computed by CMake
+async4_IS_TOP_LEVEL:STATIC=ON
+
+//Value Computed by CMake
+async4_SOURCE_DIR:STATIC=/Users/SamuelBlandon/proyects/cpp/fc++
+
+//The directory containing a CMake configuration file for boost_OpenSSL.
+boost_OpenSSL_DIR:PATH=boost_OpenSSL_DIR-NOTFOUND
 
 //The directory containing a CMake configuration file for boost_assert.
 boost_assert_DIR:PATH=C:/Users/samue/OneDrive/Desktop/Web_from_web/cpp/fc++/build/vcpkg_installed/x64-windows/share/boost_assert
@@ -449,7 +479,29 @@ CMAKE_TOOLCHAIN_FILE-ADVANCED:INTERNAL=1
 //ADVANCED property for variable: CMAKE_VERBOSE_MAKEFILE
 CMAKE_VERBOSE_MAKEFILE-ADVANCED:INTERNAL=1
 //Details about finding Boost
+<<<<<<< HEAD
 FIND_PACKAGE_MESSAGE_DETAILS_Boost:INTERNAL=[C:/Users/samue/OneDrive/Desktop/Web_from_web/cpp/fc++/build/vcpkg_installed/x64-windows/share/boost/BoostConfig.cmake][found components: system ][v1.88.0()]
+=======
+FIND_PACKAGE_MESSAGE_DETAILS_Boost:INTERNAL=[/Users/SamuelBlandon/vcpkg/installed/arm64-osx/share/boost/BoostConfig.cmake][found components: system ][v1.88.0()]
+//Details about finding OpenSSL
+FIND_PACKAGE_MESSAGE_DETAILS_OpenSSL:INTERNAL=[/opt/homebrew/opt/openssl@3/lib/libcrypto.dylib][/opt/homebrew/opt/openssl@3/include][ ][v3.5.0()]
+//ADVANCED property for variable: OPENSSL_CRYPTO_LIBRARY
+OPENSSL_CRYPTO_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: OPENSSL_INCLUDE_DIR
+OPENSSL_INCLUDE_DIR-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: OPENSSL_SSL_LIBRARY
+OPENSSL_SSL_LIBRARY-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PKG_CONFIG_ARGN
+PKG_CONFIG_ARGN-ADVANCED:INTERNAL=1
+//ADVANCED property for variable: PKG_CONFIG_EXECUTABLE
+PKG_CONFIG_EXECUTABLE-ADVANCED:INTERNAL=1
+//Install the dependencies listed in your manifest:
+//\n    If this is off, you will have to manually install your dependencies.
+//\n    See https://github.com/microsoft/vcpkg/tree/master/docs/specifications/manifests.md
+// for more info.
+//\n
+VCPKG_MANIFEST_INSTALL:INTERNAL=OFF
+>>>>>>> 7654886ff7858de33cf7477a14e1766e0b82ceaf
 //ADVANCED property for variable: VCPKG_VERBOSE
 VCPKG_VERBOSE-ADVANCED:INTERNAL=1
 //Making sure VCPKG_MANIFEST_MODE doesn't change
