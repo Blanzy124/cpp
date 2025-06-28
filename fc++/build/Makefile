@@ -129,29 +129,53 @@ async4/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/async4.dir/build.make CMakeFiles/async4.dir/build
 .PHONY : async4/fast
 
-main.o: main.cpp.o
-.PHONY : main.o
+httpPerform.o: httpPerform.cpp.o
+.PHONY : httpPerform.o
 
 # target to build an object file
-main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/async4.dir/build.make CMakeFiles/async4.dir/main.cpp.o
-.PHONY : main.cpp.o
+httpPerform.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/async4.dir/build.make CMakeFiles/async4.dir/httpPerform.cpp.o
+.PHONY : httpPerform.cpp.o
 
-main.i: main.cpp.i
-.PHONY : main.i
+httpPerform.i: httpPerform.cpp.i
+.PHONY : httpPerform.i
 
 # target to preprocess a source file
-main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/async4.dir/build.make CMakeFiles/async4.dir/main.cpp.i
-.PHONY : main.cpp.i
+httpPerform.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/async4.dir/build.make CMakeFiles/async4.dir/httpPerform.cpp.i
+.PHONY : httpPerform.cpp.i
 
-main.s: main.cpp.s
-.PHONY : main.s
+httpPerform.s: httpPerform.cpp.s
+.PHONY : httpPerform.s
 
 # target to generate assembly for a file
-main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/async4.dir/build.make CMakeFiles/async4.dir/main.cpp.s
-.PHONY : main.cpp.s
+httpPerform.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/async4.dir/build.make CMakeFiles/async4.dir/httpPerform.cpp.s
+.PHONY : httpPerform.cpp.s
+
+serverConecction.o: serverConecction.cpp.o
+.PHONY : serverConecction.o
+
+# target to build an object file
+serverConecction.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/async4.dir/build.make CMakeFiles/async4.dir/serverConecction.cpp.o
+.PHONY : serverConecction.cpp.o
+
+serverConecction.i: serverConecction.cpp.i
+.PHONY : serverConecction.i
+
+# target to preprocess a source file
+serverConecction.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/async4.dir/build.make CMakeFiles/async4.dir/serverConecction.cpp.i
+.PHONY : serverConecction.cpp.i
+
+serverConecction.s: serverConecction.cpp.s
+.PHONY : serverConecction.s
+
+# target to generate assembly for a file
+serverConecction.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/async4.dir/build.make CMakeFiles/async4.dir/serverConecction.cpp.s
+.PHONY : serverConecction.cpp.s
 
 # Help Target
 help:
@@ -162,9 +186,12 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... async4"
-	@echo "... main.o"
-	@echo "... main.i"
-	@echo "... main.s"
+	@echo "... httpPerform.o"
+	@echo "... httpPerform.i"
+	@echo "... httpPerform.s"
+	@echo "... serverConecction.o"
+	@echo "... serverConecction.i"
+	@echo "... serverConecction.s"
 .PHONY : help
 
 
