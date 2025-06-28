@@ -48,7 +48,7 @@ class simple_GET : public std::enable_shared_from_this<simple_GET>{
 
         //METHODS
 
-        void run(std::string &targer_)
+        void run()
         {
 
             //Set SNI hostname
@@ -94,7 +94,7 @@ class simple_GET : public std::enable_shared_from_this<simple_GET>{
             {
                 return show_fail(ec, "on_connect");
             }
-
+            //Perform de handshake
             stream.async_handshake(ssl::stream_base::client, beast::bind_front_handler(&simple_GET::on_handshake, shared_from_this()));
 
         }
@@ -106,28 +106,53 @@ class simple_GET : public std::enable_shared_from_this<simple_GET>{
                 return show_fail(ec, "handshake");
             }
 
+            beast::get_lowest_layer(stream ).expires_after(std::chrono::seconds(15));
+
+            // This send the http resquest to the server (if the handshyake was succes)
             http::async_write(stream, req, beast::bind_front_handler(&simple_GET::on_write, shared_from_this())); 
         }
 
         void on_write(beast::error_code ec, std::size_t bytes_transferred)
         {
+            boost::ignore_unused(bytes_transferred);
+
             if(ec)
             {
                 return show_fail(ec, "write");
             }
-
             
+            //Receive the response from the server (host)
+            http::async_read(stream, buffer, res, beast::bind_front_handler(&simple_GET::on_read, shared_from_this()));
+
 
         }
 
         void on_read(beast::error_code ec, std::size_t bytes_transferred)
         {
 
+            boost::ignore_unused(bytes_transferred);
+
+            if(ec)
+            {
+                return show_fail(ec, "read");
+            }
+
+            std::cout << "RESPONSE" << res << std::endl;
+
+            beast::get_lowest_layer(stream).expires_after(std::chrono::seconds(15));
+
+            //Gracefully close the operation
+            stream.async_shutdown(beast::bind_front_handler(&simple_GET::on_shutdown, shared_from_this()));
+        
         }
 
         void on_shutdown(beast::error_code ec)
         {
 
+            if(ec != net::ssl::error::stream_truncated)
+            {
+                return show_fail(ec, "shutdown");
+            }
         }
         
         
