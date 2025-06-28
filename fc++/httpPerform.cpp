@@ -103,7 +103,7 @@ class simple_GET : public std::enable_shared_from_this<simple_GET>{
         {
             if(ec)
             {
-                show_fail(ec, "handshake");
+                return show_fail(ec, "handshake");
             }
 
             http::async_write(stream, req, beast::bind_front_handler(&simple_GET::on_write, shared_from_this())); 
@@ -111,6 +111,12 @@ class simple_GET : public std::enable_shared_from_this<simple_GET>{
 
         void on_write(beast::error_code ec, std::size_t bytes_transferred)
         {
+            if(ec)
+            {
+                return show_fail(ec, "write");
+            }
+
+            
 
         }
 

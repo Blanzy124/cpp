@@ -55,6 +55,7 @@ class server_connection : public std::enable_shared_from_this<server_connection>
 int main(){
     std::cout << "Si compilo" << std::endl;
     std::cout << "push test 2" << std::endl;
+    std::cout << "push from laptop" << std::endl;
 
     
 
