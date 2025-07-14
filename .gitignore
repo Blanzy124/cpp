@@ -1,8 +1,5 @@
-fc++/vcpkg/
+fc++/vcpkg_installed/
 fc++/build/
-fc++/CMakeFiles/
-fc++/cmake_install.cmake
-fc++/Makefile
 *.exe
 *.obj
 *.pdb

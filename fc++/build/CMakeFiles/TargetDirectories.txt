@@ -1,3 +1,0 @@
-C:/Users/samue/OneDrive/Desktop/Web_from_web/cpp/fc++/build/CMakeFiles/async4.dir
-C:/Users/samue/OneDrive/Desktop/Web_from_web/cpp/fc++/build/CMakeFiles/ALL_BUILD.dir
-C:/Users/samue/OneDrive/Desktop/Web_from_web/cpp/fc++/build/CMakeFiles/ZERO_CHECK.dir
