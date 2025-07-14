@@ -1,4 +1,5 @@
 fc++/vcpkg/
+fc++/vcpkg_intalled/
 fc++/build/
 fc++/CMakeFiles/
 fc++/cmake_install.cmake

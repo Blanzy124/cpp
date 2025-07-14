@@ -153,6 +153,30 @@ httpPerform.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/async4.dir/build.make CMakeFiles/async4.dir/httpPerform.cpp.s
 .PHONY : httpPerform.cpp.s
 
+main.o: main.cpp.o
+.PHONY : main.o
+
+# target to build an object file
+main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/async4.dir/build.make CMakeFiles/async4.dir/main.cpp.o
+.PHONY : main.cpp.o
+
+main.i: main.cpp.i
+.PHONY : main.i
+
+# target to preprocess a source file
+main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/async4.dir/build.make CMakeFiles/async4.dir/main.cpp.i
+.PHONY : main.cpp.i
+
+main.s: main.cpp.s
+.PHONY : main.s
+
+# target to generate assembly for a file
+main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/async4.dir/build.make CMakeFiles/async4.dir/main.cpp.s
+.PHONY : main.cpp.s
+
 serverConecction.o: serverConecction.cpp.o
 .PHONY : serverConecction.o
 
@@ -177,6 +201,30 @@ serverConecction.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/async4.dir/build.make CMakeFiles/async4.dir/serverConecction.cpp.s
 .PHONY : serverConecction.cpp.s
 
+sesion.o: sesion.cpp.o
+.PHONY : sesion.o
+
+# target to build an object file
+sesion.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/async4.dir/build.make CMakeFiles/async4.dir/sesion.cpp.o
+.PHONY : sesion.cpp.o
+
+sesion.i: sesion.cpp.i
+.PHONY : sesion.i
+
+# target to preprocess a source file
+sesion.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/async4.dir/build.make CMakeFiles/async4.dir/sesion.cpp.i
+.PHONY : sesion.cpp.i
+
+sesion.s: sesion.cpp.s
+.PHONY : sesion.s
+
+# target to generate assembly for a file
+sesion.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/async4.dir/build.make CMakeFiles/async4.dir/sesion.cpp.s
+.PHONY : sesion.cpp.s
+
 # Help Target
 help:
 	@echo "The following are some of the valid targets for this Makefile:"
@@ -189,9 +237,15 @@ help:
 	@echo "... httpPerform.o"
 	@echo "... httpPerform.i"
 	@echo "... httpPerform.s"
+	@echo "... main.o"
+	@echo "... main.i"
+	@echo "... main.s"
 	@echo "... serverConecction.o"
 	@echo "... serverConecction.i"
 	@echo "... serverConecction.s"
+	@echo "... sesion.o"
+	@echo "... sesion.i"
+	@echo "... sesion.s"
 .PHONY : help
 
 

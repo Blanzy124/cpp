@@ -1,8 +1,3 @@
-//#include <boost/beast/core.hpp>
-//#include <boost/beast/http.hpp>
-//#include <boost/beast/version.hpp>
-//#include <boost/asio/connect.hpp>
-//#include <boost/asio/ip/tcp.hpp>
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
@@ -11,56 +6,59 @@
 #include <future>
 #include <thread>
 #include <chrono>
-#include <mutex>
+
+#include "connection/serverConecction.cpp"
+
+#include "config/config.hpp"
+
+#include "session.cpp"
+
 
 using namespace std;
 using std::cout;
 
-std::mutex mtx;
+int main()
+{
 
-void show1(string* input){
-    string inputC;
-    while (true)
-    {
-        //std::lock_guard<std::mutex> lock(mtx);
-        mtx.lock();
-        if(*input != inputC){
-            cout << "address: " << &input << endl;
-            cout << *input << "salida" << endl;
-            inputC = *input;
-        }
-        mtx.unlock();
-    }
-    return;
-}
+    int option;
+    server_connection server(host, port);
+    server.load_certificates();
 
-void getLine(string* input){
-    string inputC = "";
-    while (true)
-    {
-        std::getline(std::cin, inputC);
-        mtx.lock();
-        //std::lock_guard<std::mutex> lock(mtx);
-        if(*input != inputC){
-            *input = inputC;
-        }
-        mtx.unlock();
-    }
-    return;
+
+    cout << "Type \"0\" to close\n";
     
-}
-int main(){
-
-    int l;
-    int s;
-    cout << "hello to multi-thred in and out, esto es con los threads \n";
-    string address = "";
-    string *p_address = &address;
-
-    std::thread f1(getLine, p_address);
-    std::thread s2(show1, p_address);
-    f1.join();
-    s2.join();
     
+    
+    while(option != 0)
+    {
+        cout<< "Type your option\n";
+
+        std::cin >> option;
+        
+        switch (option)
+        {
+            case 0:
+            std::exit(0);
+            break;
+            case 1:
+            {
+                server.set_target("/");
+                std::thread t1([&server] () {
+                    server.perform_simple_GET();
+                }); 
+                t1.join();
+                cout << sizeof(t1) << "   " << sizeof(server) << std::endl;
+                cout << server.get_response_json() << "response" << std::endl;
+                break;
+            }
+        default:
+            cout << "Comand undefined\n";
+            break;
+        }
+
+    }
+
+
+
     return 0;
 }
