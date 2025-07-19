@@ -7,11 +7,11 @@
 #include <thread>
 #include <chrono>
 
-#include "connection/serverConecction.cpp"
+#include "connection/serverConecction.hpp"
 
 #include "config/config.hpp"
 
-#include "session.cpp"
+//#include "session.cpp"
 
 
 using namespace std;
@@ -21,8 +21,8 @@ int main()
 {
 
     int option;
+    cout <<host<<port<< "\n";
     server_connection server(host, port);
-    server.load_certificates();
 
 
     cout << "Type \"0\" to close\n";

@@ -1,4 +1,5 @@
-#include "config.hpp"
+#include <iostream>
+#include "config/config.hpp"
 
-const char* host = "blanzynetwork.org";
-const char* port = "8443";
+std::string host = "blanzynetwork.org";
+std::string port = "8443";

@@ -12,7 +12,8 @@ find_package(nlohmann_json CONFIG REQUIRED)
 find_package(fmt CONFIG REQUIRED)
 
 add_subdirectory(connection)
-add_subdirectory(session)
+add_subdirectory(config)
+#add_subdirectory(session)
 
 #set(SOURCES
 #	main.cpp
@@ -29,8 +30,9 @@ target_include_directories(async4 PRIVATE
 )
 
 target_link_libraries(async4 PRIVATE
+	configLib
 	connectionLib
-	sesSionLib
+	#sesSionLib
 	Boost::system
 	OpenSSL::SSL
 	OpenSSL::Crypto

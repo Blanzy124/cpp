@@ -1,2 +1,3 @@
-const char* host;
-const char* port;
+#include <iostream>
+extern std::string host;
+extern std::string port;

@@ -111,5 +111,6 @@
     "queue": "cpp",
     "stack": "cpp"
 },
- "C_Cpp.errorSquiggles": "enabled"
+"C_Cpp.errorSquiggles": "enabled",
+"cmake.sourceDirectory": "/Users/SamuelBlandon/proyects/cpp/fc++"
 }

@@ -21,9 +21,9 @@ using std::cout;
 class user_sesion{
 
     protected:
-        string userName;
-        string cookieId;
-        string JWT;
+        std::string userName;
+        std::string cookieId;
+        std::string JWT;
 
 
     public:

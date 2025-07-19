@@ -1,4 +1,5 @@
-#include "certificades.hpp"
+#ifndef SERVER_CONNECTION_HPP
+
 #include "httpPerform.hpp"
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
@@ -8,9 +9,7 @@
 
 #include <cstdlib>
 #include <iostream>
-#include <memory>
 #include <string>
-#include <thread>
 #include <mutex>
 
 
@@ -24,8 +23,28 @@ inline std::mutex mtx;
 
 class server_connection{
  protected:
-  std::string response_json;
-  const char* &host;
-  const char* &port;
+ std::string &host;
+ std::string &port;
+ std::string target;
+ std::string response_json;
+ 
+ 
+ public:
+  //static std::string response_json;
+ 
+  explicit server_connection(std::string &host_, std::string &port_);
+  ~server_connection();
+  void set_secure(bool secure, ssl::context &ctx);
+  void set_target(const char* target_);
+  
+  //GETTERS
+  std::string get_response_json();
+  
+  //METHODS
+  void perform_simple_GET();
+  std::string login(std::string userName, std::string password);
+  
+
 
 };
+#endif

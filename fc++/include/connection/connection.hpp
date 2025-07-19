@@ -1,5 +1,5 @@
-#ifndef SIMPLE_GET_HPP
-#define SIMPLE_GET_HPP
+#ifndef CONNECTION
+#define CONNECTION
 
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
@@ -30,6 +30,7 @@ class simple_GET : public std::enable_shared_from_this<simple_GET>{
         std::string &host;
         std::string &port;
         std::string &target;
+        int &version;
         //Target must be set in each request
         //performcHTTP GET
         http::request<http::empty_body> req;
@@ -37,24 +38,17 @@ class simple_GET : public std::enable_shared_from_this<simple_GET>{
         tcp::resolver resolver;
         ssl::stream<beast::tcp_stream> stream;
         beast::flat_buffer buffer;
-        
-        int version;
-        //IO CONTEXt
 
-        net::io_context ioc;
-        //CONTEXT
-        ssl::context ctx{ssl::context::tlsv12_client};
+
     public:
         //Constructor and destructor
-        explicit simple_GET(std::string  &host_, std::string &port_, std::string  &target_, std::string &response_json_); //net::any_io_executor ex, ssl::context &ctx,
+        explicit simple_GET(std::string  &host_, std::string &port_, std::string  &target_, int &version_, net::any_io_executor ex, ssl::context &ctx, std::string &response_json_);
         ~simple_GET();
 
         //SETTERS
         void set_target(const char* &target_);
 
         //METHODS
-        void procces_restart();
-
         void run();
         void on_resolve(beast::error_code ec, tcp::resolver::results_type result);
         void on_connect(beast::error_code ec, tcp::resolver::results_type::endpoint_type);
@@ -71,4 +65,3 @@ class simple_GET : public std::enable_shared_from_this<simple_GET>{
 };    
 
 #endif
-

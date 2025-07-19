@@ -5,8 +5,9 @@ set(CONNECTION_SRC
     serverConecction.cpp
 )
 
-add_library(connectionLib STATIC ${CONNECTION_SRC})
+add_library(connectionLib ${CONNECTION_SRC})
 
-target_include_directories(connection PUBLIC
+target_include_directories(connectionLib PUBLIC
     ${CMAKE_SOURCE_DIR}/include
+    ${Boost_INCLUDE_DIRS}
 )

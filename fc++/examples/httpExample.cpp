@@ -171,7 +171,7 @@ int main(int argc, char** argv)
     std::cout << "This is the VERSION " << version << std::endl;
 
     // The io_context is required for all I/O
-        net::io_context ioc;
+    net::io_context ioc;
 
     // The SSL context is required, and holds certificates
     ssl::context ctx{ssl::context::tlsv12_client};
