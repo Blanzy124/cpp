@@ -71,8 +71,8 @@ void simple_GET::run()
     req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
             
     //Look up at the domain name
-    ioc.run();
     resolver.async_resolve(host, port, beast::bind_front_handler(&simple_GET::on_resolve, shared_from_this()));
+    ioc.run();
 
 
 }

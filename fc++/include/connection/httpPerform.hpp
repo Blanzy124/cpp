@@ -22,14 +22,25 @@ using std::cout;
 
 
 inline void show_fail(beast::error_code &ec, const char* what);
+
 class simple_GET : public std::enable_shared_from_this<simple_GET>{
     protected:
         //this is the resonces that comes from server
         std::string &response_json;
+
         //request specs
         std::string &host;
         std::string &port;
         std::string &target;
+
+        //htto version
+        int version;
+
+        //IO CONTEXt
+        net::io_context ioc;
+        //CONTEXT
+        ssl::context ctx{ssl::context::tlsv12_client};
+
         //Target must be set in each request
         //performcHTTP GET
         http::request<http::empty_body> req;
@@ -38,12 +49,7 @@ class simple_GET : public std::enable_shared_from_this<simple_GET>{
         ssl::stream<beast::tcp_stream> stream;
         beast::flat_buffer buffer;
         
-        int version;
-        //IO CONTEXt
 
-        net::io_context ioc;
-        //CONTEXT
-        ssl::context ctx{ssl::context::tlsv12_client};
     public:
         //Constructor and destructor
         explicit simple_GET(std::string  &host_, std::string &port_, std::string  &target_, std::string &response_json_); //net::any_io_executor ex, ssl::context &ctx,

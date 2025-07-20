@@ -30,8 +30,10 @@ std::string server_connection::get_response_json()
 void server_connection::perform_simple_GET()
 {
     //mtx.lock();
-    auto make = std::make_shared<simple_GET>(host, port, target, response_json); 
-    make->run();
+    std::cout << &response_json << "responseJson\n";
+    //auto make = 
+    std::make_shared<simple_GET>(host, port, target, response_json)->run();
+    //make->run();
     cout << "performed\n";
     //mtx.unlock();
     return;
