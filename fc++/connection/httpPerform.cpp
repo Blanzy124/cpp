@@ -43,7 +43,7 @@ void Connection::procces_restart()
 };
 
 
-
+//SIMPLE GET
 void Connection::simple_GET(std::string target)
 {
     cout << "run\n";
@@ -72,6 +72,37 @@ void Connection::simple_GET(std::string target)
 
 
 }
+
+//LOGIN
+std::string Connection::login(std::string &userName, std::string userPassword, std::string target, std::string &cookieId)
+{
+    cout << "run\n";
+
+    //Set SNI hostname
+    if(!SSL_set_tlsext_host_name(stream.native_handle(), host.c_str()))
+    {
+        beast::error_code ec(static_cast<int> (::ERR_get_error()), net::error::get_ssl_category());
+        std::cerr << ec.message() << std::endl;
+        Connection::procces_restart();
+        return;
+    }
+            
+    stream.set_verify_callback(ssl::host_name_verification(host)); //This set the expected hostname (doamain).
+
+    //This set the GET request message
+    req.version(version);
+    req.method(http::verb::get);
+    req.target(target);
+    req.set(http::field::host, host);
+    req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
+            
+    //Look up at the domain name
+    resolver.async_resolve(host, port, beast::bind_front_handler(&Connection::on_resolve, shared_from_this()));
+    ioc.run();
+
+
+}
+
 
 void Connection::on_resolve(beast::error_code ec, tcp::resolver::results_type result)
 {
