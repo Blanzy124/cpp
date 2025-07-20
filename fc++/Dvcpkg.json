@@ -5,6 +5,7 @@
     "boost-beast",
     "boost-asio",
     "nlohmann-json",
-    "fmt"
+    "fmt",
+    "openssl"
   ]
 }
