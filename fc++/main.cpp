@@ -22,7 +22,7 @@ int main()
 
     int option;
     cout <<host<<port<< "\n";
-    server_connection server(host, port);
+    server_connection server;
 
 
     cout << "Type \"0\" to close\n";
@@ -42,10 +42,10 @@ int main()
             break;
             case 1:
             {
-                server.set_target("/");
                 std::thread t1([&server] () {
                     server.perform_simple_GET();
                 }); 
+                
                 t1.join();
                 cout << sizeof(t1) << "   " << sizeof(server) << std::endl;
                 cout << server.get_response_json() << "response" << std::endl;

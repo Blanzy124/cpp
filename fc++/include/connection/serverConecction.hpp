@@ -7,6 +7,8 @@
 #include <boost/asio/ssl.hpp>
 #include <boost/asio/strand.hpp>
 
+#include "connection/targets.hpp"
+
 #include <cstdlib>
 #include <iostream>
 #include <string>
@@ -23,19 +25,21 @@ inline std::mutex mtx;
 
 class server_connection{
  protected:
- std::string &host;
- std::string &port;
- std::string target;
+ std::string host;
+ std::string port;
  std::string response_json;
+ std::shared_ptr<Connection> perform;
+
+ //MAIN HEADER FILE WHERE ALL TARGETS ARE
+ Targets_to target_to;
  
  
  public:
   //static std::string response_json;
  
-  explicit server_connection(std::string &host_, std::string &port_);
+  explicit server_connection();
   ~server_connection();
   void set_secure(bool secure, ssl::context &ctx);
-  void set_target(const char* target_);
   
   //GETTERS
   std::string get_response_json();
