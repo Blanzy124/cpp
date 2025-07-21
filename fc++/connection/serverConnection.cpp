@@ -1,7 +1,8 @@
 #include "common/certificades.hpp"
 #include "connection/httpPerform.hpp"
-#include "connection/serverConecction.hpp"
+#include "connection/serverConnection.hpp"
 #include "connection/targets.hpp"
+#include "session/session.hpp"
 
 #include <cstdlib>
 #include <iostream>
@@ -30,13 +31,9 @@ void server_connection::perform_simple_GET()
 
 
 
-std::string server_connection::login(std::string userName, std::string password)
+std::string server_connection::login(std::string userName, std::string userPassword, std::string &cookieId)
 {
-    mtx.lock();
-    auto make = std::make_shared<Connection>(host, port, response_json); 
-    make->simple_GET("/");
-    cout << "performed\n";
-    mtx.unlock();
+    perform->login(userName, userPassword, target_to.loging, cookieId);
     return "gola";
 }
 

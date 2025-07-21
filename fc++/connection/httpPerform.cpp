@@ -1,12 +1,16 @@
-//#include "certificades.hpp"
-#include "connection/httpPerform.hpp"
-#include "common/certificades.hpp"
+
+#include <connection/httpPerform.hpp>
+#include <common/certificades.hpp>
+#include <session/session.hpp>
 
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/beast/version.hpp>
 #include <boost/asio/ssl.hpp>
 #include <boost/asio/strand.hpp>
+
+#include <nlohmann/json.hpp>
+
 #include <cstdlib>
 #include <iostream>
 #include <memory>
@@ -74,7 +78,7 @@ void Connection::simple_GET(std::string target)
 }
 
 //LOGIN
-std::string Connection::login(std::string &userName, std::string userPassword, std::string target, std::string &cookieId)
+void Connection::login(std::string &userName, std::string &userPassword, std::string &target, std::string &cookieId)
 {
     cout << "run\n";
 
@@ -103,7 +107,7 @@ std::string Connection::login(std::string &userName, std::string userPassword, s
 
 }
 
-
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 void Connection::on_resolve(beast::error_code ec, tcp::resolver::results_type result)
 {
     cout << "resolve\n";
@@ -176,8 +180,9 @@ void Connection::on_read(beast::error_code ec, std::size_t bytes_transferred)
         Connection::procces_restart();
         return;
     }
-    response_json = res.body();
-    //std::cout << "RESPONSE" << res << std::endl;
+
+    //response_json = res;
+    std::cout << "RESPONSE" << res << std::endl;
     beast::get_lowest_layer(stream).expires_after(std::chrono::seconds(15));
     buffer.clear();
     //Gracefully close the operation

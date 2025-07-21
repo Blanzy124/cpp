@@ -2,7 +2,7 @@
 
 set(CONNECTION_SRC
     httpPerform.cpp
-    serverConecction.cpp
+    serverConnection.cpp
 )
 
 add_library(connectionLib ${CONNECTION_SRC})

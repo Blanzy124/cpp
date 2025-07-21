@@ -7,18 +7,12 @@
 #include <thread>
 #include <chrono>
 
-#include "connection/serverConecction.cpp"
-#include "config.hpp"
-
-#include <nlohmann/json.hpp>
-using json = nlohmann::json;
-
 
 
 using namespace std;
 using std::cout;
 
-class user_sesion{
+class User_session{
 
     protected:
         std::string userName;
@@ -27,9 +21,9 @@ class user_sesion{
 
 
     public:
-        explicit user_sesion();
+        explicit User_session();
 
-        ~user_sesion();
+        ~User_session();
 
         void showtest();
 
@@ -47,7 +41,6 @@ class user_sesion{
 
 
         //METHODS
-        std::string user_login(string userName, string userPassword);
 
 
 

@@ -1,11 +1,11 @@
 # sesion/CMakeLists.txt
 
 set(SESSION_SRC
-    sesion.cpp
+    session.cpp
 )
 
-add_library(sesionLib PUBLIC ${SESSION_SRC})
+add_library(sessionLib ${SESSION_SRC})
 
-target_include_directories(sesionLib PUBLIC
+target_include_directories(sessionLib PUBLIC
     ${CMAKE_SOURCE_DIR}/include
 )

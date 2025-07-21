@@ -46,7 +46,8 @@ class server_connection{
   
   //METHODS
   void perform_simple_GET();
-  std::string login(std::string userName, std::string password);
+
+  std::string login(std::string userName, std::string userPassword, std::string &cookieId);
   
 
 

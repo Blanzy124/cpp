@@ -7,46 +7,48 @@
 #include <thread>
 #include <chrono>
 
-#include "connection/serverConecction.cpp"
-#include "config.hpp"
+#include <session/session.hpp>
 
-#include <nlohmann/json.hpp>
-using json = nlohmann::json;
+
 
 
 
 using namespace std;
 using std::cout;
 
-class user_sesion{
+User_session::User_session(){};
+User_session::~User_session(){};
 
-    protected:
-        std::string userName;
-        std::string cookieId;
-        std::string JWT;
+//SETTERS
+void User_session::set_userName(std::string userName_)
+{
+    userName = userName_;
+}
 
+void User_session::set_cookieId(std::string cookieId_)
+{
+    cookieId = cookieId_;
+}
 
-    public:
-        sserver_connection server();
+void User_session::set_JWT(std::string JWT_)
+{
+    JWT = JWT_;
+}
 
-        explicit user_sesion(){};
-        ~user_sesion(){};
+//GETTERS
+std::string User_session::get_userName()
+{
+    return userName;
+}
 
-        void showtest()
-        {
-            std::string data{R"({"name": "Samuel", "age": 27})"};
-        
-            json Doc{json::parse(data)};
-        
-            std::cout << Doc["name"] << std::endl;
-            std::cout << Doc["age"] << std::endl;
-        };
+std::string User_session::get_cookieId()
+{
+    return cookieId;
+}
 
-        string user_login(string userName, string userPassword)
-        {
-        }
+std::string User_session::get_JWT()
+{
+    return JWT;
+}
 
-
-
-};
 

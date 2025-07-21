@@ -6,6 +6,9 @@
 #include <boost/beast/version.hpp>
 #include <boost/asio/ssl.hpp>
 #include <boost/asio/strand.hpp>
+
+#include <nlohmann/json.hpp>
+
 #include <cstdlib>
 #include <iostream>
 #include <memory>
@@ -61,7 +64,7 @@ class Connection : public std::enable_shared_from_this<Connection>{
         void procces_restart();
 
         void simple_GET(std::string target);
-        std::string login(std::string &userName, std::string userPassword, std::string target, std::string &cookieId);
+        void login(std::string &userName, std::string &userPassword, std::string &target, std::string &cookieId);
 
         void on_resolve(beast::error_code ec, tcp::resolver::results_type result);
         void on_connect(beast::error_code ec, tcp::resolver::results_type::endpoint_type);

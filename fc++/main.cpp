@@ -7,7 +7,7 @@
 #include <thread>
 #include <chrono>
 
-#include "connection/serverConecction.hpp"
+#include "connection/serverConnection.hpp"
 
 #include "config/config.hpp"
 
