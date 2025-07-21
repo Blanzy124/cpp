@@ -25,8 +25,6 @@ inline std::mutex mtx;
 
 class server_connection{
  protected:
- std::string host;
- std::string port;
  std::string response_json;
  std::shared_ptr<Connection> perform;
 

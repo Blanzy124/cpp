@@ -31,7 +31,7 @@ inline void show_fail(beast::error_code &ec, const char* what)
 }
 
 Connection::Connection(std::string  &host_, std::string &port_, std::string &response_json_) : 
-    host(host_), port(port_), response_json(response_json_), resolver(net::make_strand(ioc)), stream(net::make_strand(ioc), ctx), version(11){ cout << "Connection created\n"; load_root_certificates(ctx); };
+    host(host_), port(port_), response_json(response_json_), resolver(net::make_strand(ioc)), version(11){ load_root_certificates(ctx); reset_stream();};
 
 Connection::~Connection(){std::cout << "[Connection] destruido correctamente\n";};
 
@@ -41,6 +41,15 @@ Connection::~Connection(){std::cout << "[Connection] destruido correctamente\n";
 
 //METHODS
 
+void Connection::reset_stream()
+{
+    stream = std::make_unique<ssl::stream<beast::tcp_stream>>(net::make_strand(ioc),ctx);
+    req = {};
+    buffer.clear();
+    res.clear();
+    res.body().clear();
+}
+
 void Connection::procces_restart()
 {
     ioc.restart();
@@ -48,22 +57,23 @@ void Connection::procces_restart()
 
 
 //SIMPLE GET
-void Connection::simple_GET(std::string target)
+void Connection::simple_GET(std::string &target)
 {
     cout << "run\n";
 
     //Set SNI hostname
-    if(!SSL_set_tlsext_host_name(stream.native_handle(), host.c_str()))
+    if(!SSL_set_tlsext_host_name(stream->native_handle(), host.c_str()))
     {
         beast::error_code ec(static_cast<int> (::ERR_get_error()), net::error::get_ssl_category());
         std::cerr << ec.message() << std::endl;
-        Connection::procces_restart();
+        
         return;
     }
             
-    stream.set_verify_callback(ssl::host_name_verification(host)); //This set the expected hostname (doamain).
+    stream->set_verify_callback(ssl::host_name_verification(host)); //This set the expected hostname (doamain).
 
     //This set the GET request message
+
     req.version(version);
     req.method(http::verb::get);
     req.target(target);
@@ -72,9 +82,9 @@ void Connection::simple_GET(std::string target)
             
     //Look up at the domain name
     resolver.async_resolve(host, port, beast::bind_front_handler(&Connection::on_resolve, shared_from_this()));
+    
+    ioc.restart();
     ioc.run();
-
-
 }
 
 //LOGIN
@@ -83,15 +93,15 @@ void Connection::login(std::string &userName, std::string &userPassword, std::st
     cout << "run\n";
 
     //Set SNI hostname
-    if(!SSL_set_tlsext_host_name(stream.native_handle(), host.c_str()))
+    if(!SSL_set_tlsext_host_name(stream->native_handle(), host.c_str()))
     {
         beast::error_code ec(static_cast<int> (::ERR_get_error()), net::error::get_ssl_category());
         std::cerr << ec.message() << std::endl;
-        Connection::procces_restart();
+        
         return;
     }
             
-    stream.set_verify_callback(ssl::host_name_verification(host)); //This set the expected hostname (doamain).
+    stream->set_verify_callback(ssl::host_name_verification(host)); //This set the expected hostname (doamain).
 
     //This set the GET request message
     req.version(version);
@@ -102,9 +112,8 @@ void Connection::login(std::string &userName, std::string &userPassword, std::st
             
     //Look up at the domain name
     resolver.async_resolve(host, port, beast::bind_front_handler(&Connection::on_resolve, shared_from_this()));
+    ioc.restart();
     ioc.run();
-
-
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -114,16 +123,16 @@ void Connection::on_resolve(beast::error_code ec, tcp::resolver::results_type re
         if(ec)
     {
         show_fail(ec, "resolve");
-        beast::get_lowest_layer(stream).close();
-        Connection::procces_restart();
+        beast::get_lowest_layer(*stream).close();
+        
         return; 
     };
 
     //set a time out.
-    beast::get_lowest_layer(stream).expires_after(std::chrono::seconds(10));
+    beast::get_lowest_layer(*stream).expires_after(std::chrono::seconds(10));
 
     //make the connection on the cloudflare IP address.
-    beast::get_lowest_layer(stream).async_connect(result, beast::bind_front_handler(&Connection::on_connect, shared_from_this()));
+    beast::get_lowest_layer(*stream).async_connect(result, beast::bind_front_handler(&Connection::on_connect, shared_from_this()));
 }
 
 void Connection::on_connect(beast::error_code ec, tcp::resolver::results_type::endpoint_type)
@@ -131,12 +140,12 @@ void Connection::on_connect(beast::error_code ec, tcp::resolver::results_type::e
     if(ec)
     {
         show_fail(ec, "on_connect");
-        beast::get_lowest_layer(stream).close();
-        Connection::procces_restart();
+        beast::get_lowest_layer(*stream).close();
+        
         return;
     }
     //Perform de handshake
-    stream.async_handshake(ssl::stream_base::client, beast::bind_front_handler(&Connection::on_handshake, shared_from_this()));
+    stream->async_handshake(ssl::stream_base::client, beast::bind_front_handler(&Connection::on_handshake, shared_from_this()));
 }
 
 void Connection::on_handshake(beast::error_code ec)
@@ -144,15 +153,15 @@ void Connection::on_handshake(beast::error_code ec)
     if(ec)
     {
         show_fail(ec, "handshake");
-        beast::get_lowest_layer(stream).close();
-        Connection::procces_restart();
+        beast::get_lowest_layer(*stream).close();
+        
         return; 
     }
 
-    beast::get_lowest_layer(stream ).expires_after(std::chrono::seconds(15));
+    beast::get_lowest_layer(*stream).expires_after(std::chrono::seconds(15));
 
     // This send the http resquest to the server (if the handshyake was succes)
-    http::async_write(stream, req, beast::bind_front_handler(&Connection::on_write, shared_from_this())); 
+    http::async_write(*stream, req, beast::bind_front_handler(&Connection::on_write, shared_from_this())); 
 }
 
 void Connection::on_write(beast::error_code ec, std::size_t bytes_transferred)
@@ -161,13 +170,13 @@ void Connection::on_write(beast::error_code ec, std::size_t bytes_transferred)
     if(ec)
     {
         show_fail(ec, "write");
-        beast::get_lowest_layer(stream).close();
-        Connection::procces_restart();
+        beast::get_lowest_layer(*stream).close();
+        
         return; 
     }
     
     //Receive the response from the server (host)
-    http::async_read(stream, buffer, res, beast::bind_front_handler(&Connection::on_read, shared_from_this()));
+    http::async_read(*stream, buffer, res, beast::bind_front_handler(&Connection::on_read, shared_from_this()));
 }
 
 void Connection::on_read(beast::error_code ec, std::size_t bytes_transferred)
@@ -176,17 +185,16 @@ void Connection::on_read(beast::error_code ec, std::size_t bytes_transferred)
     if(ec)
     {
         show_fail(ec, "read");
-        beast::get_lowest_layer(stream).close();
-        Connection::procces_restart();
+        beast::get_lowest_layer(*stream).close();
+        
         return;
     }
 
     //response_json = res;
     std::cout << "RESPONSE" << res << std::endl;
-    beast::get_lowest_layer(stream).expires_after(std::chrono::seconds(15));
-    buffer.clear();
+    beast::get_lowest_layer(*stream).expires_after(std::chrono::seconds(15));
     //Gracefully close the operation
-    stream.async_shutdown(beast::bind_front_handler(&Connection::on_shutdown, shared_from_this()));
+    stream->async_shutdown(beast::bind_front_handler(&Connection::on_shutdown, shared_from_this()));
 
 }
 
@@ -196,8 +204,6 @@ void Connection::on_shutdown(beast::error_code ec)
     if(ec != net::ssl::error::stream_truncated)
     {
         return show_fail(ec, "shutdown");
-        Connection::procces_restart();
     }
-    beast::get_lowest_layer(stream).close();
-    Connection::procces_restart();
+    reset_stream();
 }   

@@ -3,6 +3,7 @@
 #include "connection/serverConnection.hpp"
 #include "connection/targets.hpp"
 #include "session/session.hpp"
+#include "config/config.hpp"
 
 #include <cstdlib>
 #include <iostream>
@@ -12,7 +13,7 @@
 #include <mutex>
 
 
-server_connection::server_connection() : host("blanzynetwork.org"), port("8443"), response_json(""), perform(std::make_shared<Connection>(host, port, response_json))
+server_connection::server_connection() : response_json(""), perform(std::make_shared<Connection>(host, port, response_json))
 {
 };
 
@@ -25,6 +26,7 @@ std::string server_connection::get_response_json()
 
 void server_connection::perform_simple_GET()
 {
+    std::cout << &perform << "\n";
     perform->simple_GET(target_to.wellcome);
 }
 

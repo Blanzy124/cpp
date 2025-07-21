@@ -9,7 +9,6 @@
 
 #include "connection/serverConnection.hpp"
 
-#include "config/config.hpp"
 
 //#include "session.cpp"
 
@@ -20,8 +19,7 @@ using std::cout;
 int main()
 {
 
-    int option;
-    cout <<host<<port<< "\n";
+    int option = 999;
     server_connection server;
 
 
@@ -38,6 +36,7 @@ int main()
         switch (option)
         {
             case 0:
+            server.~server_connection();
             std::exit(0);
             break;
             case 1:
@@ -45,10 +44,7 @@ int main()
                 std::thread t1([&server] () {
                     server.perform_simple_GET();
                 }); 
-                
                 t1.join();
-                cout << sizeof(t1) << "   " << sizeof(server) << std::endl;
-                cout << server.get_response_json() << "response" << std::endl;
                 break;
             }
         default:
@@ -58,7 +54,7 @@ int main()
 
     }
 
-
+    server.~server_connection();
 
     return 0;
 }

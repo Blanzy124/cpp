@@ -48,7 +48,7 @@ class Connection : public std::enable_shared_from_this<Connection>{
         http::request<http::empty_body> req;
         http::response<http::string_body> res;
         tcp::resolver resolver;
-        ssl::stream<beast::tcp_stream> stream;
+        std::shared_ptr<ssl::stream<beast::tcp_stream>> stream;
         beast::flat_buffer buffer;
         
 
@@ -58,13 +58,13 @@ class Connection : public std::enable_shared_from_this<Connection>{
         ~Connection();
 
         //SETTERS
-        void set_target(const char* &target_);
 
         //METHODS
         void procces_restart();
 
-        void simple_GET(std::string target);
+        void simple_GET(std::string &target);
         void login(std::string &userName, std::string &userPassword, std::string &target, std::string &cookieId);
+        void reset_stream();
 
         void on_resolve(beast::error_code ec, tcp::resolver::results_type result);
         void on_connect(beast::error_code ec, tcp::resolver::results_type::endpoint_type);
