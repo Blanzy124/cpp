@@ -38,6 +38,7 @@ Connection::~Connection(){std::cout << "[Connection] destruido correctamente\n";
 
 //SETTERS
 
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //THIS MUST BE CALLED AFTER EVERY REQUEST, ON SHUTDOWN
 void Connection::reset_stream()
@@ -204,7 +205,8 @@ void Connection::on_read(beast::error_code ec, std::size_t bytes_transferred)
     }
 
     //response_json = res;
-    std::cout << "RESPONSE" << res << std::endl;
+    std::cout << "RESPONSE" << res.body() << " TARGET " << req.target() << std::endl;
+    
     beast::get_lowest_layer(*stream).expires_after(std::chrono::seconds(15));
     //Gracefully close the operation
     stream->async_shutdown(beast::bind_front_handler(&Connection::on_shutdown, shared_from_this()));

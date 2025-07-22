@@ -7,10 +7,10 @@
 #include <thread>
 #include <chrono>
 
-#include "connection/serverConnection.hpp"
+#include <connection/serverConnection.hpp>
+#include <session/session.hpp>
 
 
-//#include "session.cpp"
 
 
 using namespace std;
@@ -21,6 +21,7 @@ int main()
 
     int option = 999;
     server_connection server;
+
 
 
     cout << "Type \"0\" to close\n";

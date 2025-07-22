@@ -1,8 +1,8 @@
 #ifndef SERVER_CONNECTION_HPP
 
 #include "connection/httpPerform.hpp"
-
 #include "connection/targets.hpp"
+#include <session/session.hpp>
 
 #include <cstdlib>
 #include <iostream>
@@ -24,7 +24,7 @@ class server_connection{
   //static std::string response_json;
  
   explicit server_connection();
-  ~server_connection();
+  ~server_connection(user);
   void set_secure(bool secure, ssl::context &ctx);
   
   //GETTERS

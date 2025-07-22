@@ -5,7 +5,6 @@
 
 #include <future>
 #include <thread>
-#include <chrono>
 
 #include <session/session.hpp>
 
@@ -50,5 +49,15 @@ std::string User_session::get_JWT()
 {
     return JWT;
 }
+
+//METHODS
+
+std::string User_session::target_discrimination_save(std::string &target_, std::string &response_json_)
+{
+    if(target_ == target_to.wellcome)
+    {
+
+    }
+};
 
 

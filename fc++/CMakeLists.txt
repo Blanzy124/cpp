@@ -17,6 +17,7 @@ find_package(fmt CONFIG REQUIRED)
 add_subdirectory(connection)
 add_subdirectory(config)
 add_subdirectory(session)
+add_subdirectory(save_controller)
 
 #set(SOURCES
 #	main.cpp
@@ -36,6 +37,7 @@ target_link_libraries(async4 PRIVATE
 	configLib
 	connectionLib
 	sessionLib
+	save_controllerLib
 	Boost::system
 	OpenSSL::SSL
 	OpenSSL::Crypto

@@ -7,6 +7,7 @@
 #include <thread>
 #include <chrono>
 
+#include <connection/targets.hpp>
 
 
 using namespace std;
@@ -18,6 +19,8 @@ class User_session{
         std::string userName;
         std::string cookieId;
         std::string JWT;
+        //MAIN HEADER FILE WHERE ALL TARGETS ARE
+        Targets_to target_to;
 
 
     public:
@@ -41,7 +44,7 @@ class User_session{
 
 
         //METHODS
-
+        std::string target_discrimination_save(std::string &target_, std::string &response_json_);
 
 
 };
