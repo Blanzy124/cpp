@@ -1,11 +1,6 @@
 #ifndef SERVER_CONNECTION_HPP
 
-#include "httpPerform.hpp"
-#include <boost/beast/core.hpp>
-#include <boost/beast/http.hpp>
-#include <boost/beast/version.hpp>
-#include <boost/asio/ssl.hpp>
-#include <boost/asio/strand.hpp>
+#include "connection/httpPerform.hpp"
 
 #include "connection/targets.hpp"
 
@@ -13,13 +8,6 @@
 #include <iostream>
 #include <string>
 #include <mutex>
-
-
-namespace beast = boost::beast;
-namespace http = beast::http;
-namespace net = boost::asio;
-namespace ssl = net::ssl;
-using tcp = net::ip::tcp;
 
 inline std::mutex mtx;
 

@@ -39,27 +39,41 @@ Connection::~Connection(){std::cout << "[Connection] destruido correctamente\n";
 //SETTERS
 
 
-//METHODS
-
+//THIS MUST BE CALLED AFTER EVERY REQUEST, ON SHUTDOWN
 void Connection::reset_stream()
 {
+    if (stream) {
+        beast::get_lowest_layer(*stream).close(); // Ensure the socket is closed
+        stream.reset(); // Release the stream
+    }
     stream = std::make_unique<ssl::stream<beast::tcp_stream>>(net::make_strand(ioc),ctx);
     req = {};
     buffer.clear();
+    buffer.consume(buffer.size());
+    buffer.shrink_to_fit();
     res.clear();
     res.body().clear();
 }
 
-void Connection::procces_restart()
+//THIS ON EVERY EXEPTION, ERROR.
+void Connection::cancel_operation()
 {
-    ioc.restart();
-};
+    resolver.cancel();
+    if (stream) {
+        beast::get_lowest_layer(*stream).cancel();
+    }
+    reset_stream();
+}
+
+////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+
+
+//METHODS
 
 
 //SIMPLE GET
 void Connection::simple_GET(std::string &target)
 {
-    cout << "run\n";
 
     //Set SNI hostname
     if(!SSL_set_tlsext_host_name(stream->native_handle(), host.c_str()))
@@ -90,7 +104,6 @@ void Connection::simple_GET(std::string &target)
 //LOGIN
 void Connection::login(std::string &userName, std::string &userPassword, std::string &target, std::string &cookieId)
 {
-    cout << "run\n";
 
     //Set SNI hostname
     if(!SSL_set_tlsext_host_name(stream->native_handle(), host.c_str()))
@@ -117,13 +130,13 @@ void Connection::login(std::string &userName, std::string &userPassword, std::st
 }
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+//BOOST BEAST LOGIC
 void Connection::on_resolve(beast::error_code ec, tcp::resolver::results_type result)
 {
-    cout << "resolve\n";
         if(ec)
     {
         show_fail(ec, "resolve");
-        beast::get_lowest_layer(*stream).close();
+        cancel_operation();
         
         return; 
     };
@@ -140,7 +153,7 @@ void Connection::on_connect(beast::error_code ec, tcp::resolver::results_type::e
     if(ec)
     {
         show_fail(ec, "on_connect");
-        beast::get_lowest_layer(*stream).close();
+        cancel_operation();
         
         return;
     }
@@ -153,7 +166,7 @@ void Connection::on_handshake(beast::error_code ec)
     if(ec)
     {
         show_fail(ec, "handshake");
-        beast::get_lowest_layer(*stream).close();
+        cancel_operation();
         
         return; 
     }
@@ -170,7 +183,7 @@ void Connection::on_write(beast::error_code ec, std::size_t bytes_transferred)
     if(ec)
     {
         show_fail(ec, "write");
-        beast::get_lowest_layer(*stream).close();
+        cancel_operation();
         
         return; 
     }
@@ -185,7 +198,7 @@ void Connection::on_read(beast::error_code ec, std::size_t bytes_transferred)
     if(ec)
     {
         show_fail(ec, "read");
-        beast::get_lowest_layer(*stream).close();
+        cancel_operation();
         
         return;
     }
@@ -203,6 +216,7 @@ void Connection::on_shutdown(beast::error_code ec)
     std::cout << "here on shut\n";
     if(ec != net::ssl::error::stream_truncated)
     {
+        cancel_operation();
         return show_fail(ec, "shutdown");
     }
     reset_stream();

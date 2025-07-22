@@ -61,6 +61,7 @@ class Connection : public std::enable_shared_from_this<Connection>{
 
         //METHODS
         void procces_restart();
+        void cancel_operation();
 
         void simple_GET(std::string &target);
         void login(std::string &userName, std::string &userPassword, std::string &target, std::string &cookieId);
