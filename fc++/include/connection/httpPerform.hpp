@@ -68,7 +68,7 @@ class Connection : public std::enable_shared_from_this<Connection>{
 
         void simple_GET(std::string &target);
         void login(std::string &userName, std::string &userPassword, std::string &target);
-
+        void JWT_refresh(std::string &cookieId, std::string &target);
         void on_resolve(beast::error_code ec, tcp::resolver::results_type result);
         void on_connect(beast::error_code ec, tcp::resolver::results_type::endpoint_type);
         void on_handshake(beast::error_code ec);

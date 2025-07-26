@@ -28,10 +28,16 @@ void server_connection::perform_simple_GET()
 
 
 
-std::string server_connection::login(std::string &userName, std::string &userPassword)
+void server_connection::login(std::string &userName, std::string &userPassword)
 {
     perform->login(userName, userPassword, Target_to::loging);
-    return "gola";
+    return;
+}
+
+void server_connection::JWT_refresh(std::string cookieId)
+{
+    perform->JWT_refresh(cookieId, Target_to::JWT_refresh);
+    return;
 }
 
 

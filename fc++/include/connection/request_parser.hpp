@@ -10,6 +10,7 @@
 class Parse_to{
     public:
     static std::string login(std::string &userName, std::string &userPassword);
+    static std::string JWT_refresh(std::string &cookieId);
 };
 
 

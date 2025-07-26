@@ -108,11 +108,10 @@ void Connection::simple_GET(std::string &target)
 }
 
 
+
 //LOGIN
 void Connection::login(std::string &userName, std::string &userPassword, std::string &target)
 {
-
-    //Set SNI hostname
     if(!SSL_set_tlsext_host_name(stream->native_handle(), host.c_str()))
     {
         beast::error_code ec(static_cast<int> (::ERR_get_error()), net::error::get_ssl_category());
@@ -123,10 +122,6 @@ void Connection::login(std::string &userName, std::string &userPassword, std::st
             
     stream->set_verify_callback(ssl::host_name_verification(host)); //This set the expected hostname (doamain).
 
-    //JSON_BODY
-    //std::string j_body = Parse_to::login(userName, userPassword);
-
-    //This set the GET request message
     req.version(version);
     req.method(http::verb::post);
     req.set(http::field::host, host);
@@ -138,7 +133,38 @@ void Connection::login(std::string &userName, std::string &userPassword, std::st
 
     req.body() = Parse_to::login(userName, userPassword);
 
-    std::cout << Parse_to::login(userName, userPassword) << "\n";
+    req.prepare_payload();
+            
+    //Look up at the domain name
+    resolver.async_resolve(host, port, beast::bind_front_handler(&Connection::on_resolve, shared_from_this()));
+    ioc.restart();
+    ioc.run();
+}
+
+
+
+//REFRESH JWT
+void Connection::JWT_refresh(std::string &cookieId, std::string &target)//THIS REQUEST DO NOT RETURN A VALID JWT OBJECT, IT RETURNS A STRING WITH ""
+{
+    if(!SSL_set_tlsext_host_name(stream->native_handle(), host.c_str()))
+    {
+        beast::error_code ec(static_cast<int> (::ERR_get_error()), net::error::get_ssl_category());
+        std::cerr << ec.message() << std::endl;
+        
+        return;
+    }
+            
+    stream->set_verify_callback(ssl::host_name_verification(host)); //This set the expected hostname (doamain).
+    req.version(version);
+    req.method(http::verb::post);
+    req.set(http::field::host, host);
+
+    req.set(http::field::content_type, "application/json");
+
+    req.target(target);
+    req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
+
+    req.body() = Parse_to::JWT_refresh(cookieId);
 
     req.prepare_payload();
             
@@ -147,6 +173,9 @@ void Connection::login(std::string &userName, std::string &userPassword, std::st
     ioc.restart();
     ioc.run();
 }
+
+
+
 
 ////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //BOOST BEAST LOGIC
@@ -223,7 +252,7 @@ void Connection::on_read(beast::error_code ec, std::size_t bytes_transferred)
     }
 
 
-    std::cout << "RESPONSE" << res << " TARGET " << req.target() << std::endl;
+    std::cout << "RESPONSE" << res.body() << " TARGET " << req.target() << std::endl;
 
     save_controller.target_discrimination_save(req.target(), res.body());
     

@@ -26,7 +26,6 @@ int main()
 
     User_session session;
 
-    
 
 
 
@@ -50,9 +49,7 @@ int main()
             break;
             case 1:
             {
-                std::thread t1([&server] () {
-                    std::string userName = "SamuelMedinaBlandon";
-                    std::string userpassword = "mgee2005";
+                std::thread t1([&server, &userName, &userpassword] () {
                     server.login(userName, userpassword);
                 }); 
                 t1.join();
@@ -65,6 +62,22 @@ int main()
                 else
                 {
                     std::cout << "cookie ID: " << session.get_cookieId() << "\n";
+                }
+                break;
+            }
+            case 2:
+            {
+                std::thread t1([&server, &session] () {
+                    server.JWT_refresh(session.get_cookieId());
+                }); 
+                t1.join();
+                if(session.error_check_JWT())
+                {
+                    std::cout << session.error_get_JWT() << "\n";
+                }
+                else
+                {
+                    std::cout << "JWT : " << session.get_JWT() << "\n";
                 }
                 break;
             }

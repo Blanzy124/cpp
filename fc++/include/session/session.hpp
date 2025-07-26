@@ -9,7 +9,6 @@
 #include <thread>
 #include <chrono>
 
-#include <connection/targets.hpp>
 
 
 using namespace std;

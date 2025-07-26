@@ -37,18 +37,16 @@ void Save_controller::target_discrimination_save(std::string target_, std::strin
         {
             session.reset_error_cookieId(); //RESET THE ERROR BEFORE THE NEXT REQUEST
 
-            session.reset_error_cookieId();
             json j = json::parse(response_json_);
 
             if(j["ok"] != true)
             {
-                session.error_set_cookieId(response_json_);
+                session.error_set_cookieId(j["message"]);
                 return;
             }
             else
             {
                 session.set_cookieId(j["data"]["cookieId"]);
-                session.reset_error_cookieId();
             }
         }
         catch(const std::exception& e)
@@ -57,6 +55,30 @@ void Save_controller::target_discrimination_save(std::string target_, std::strin
         }
 
     }
+
+    if (target_ == Target_to::JWT_refresh)
+    {
+        try
+        {
+            session.reset_error_JWT();
+
+            json j = json::parse(response_json_);
+
+            if(j["ok"] != true)
+            {
+                session.error_set_JWT(j["message"]);
+                return;
+            }
+        }
+        catch(const std::exception& e)
+        {
+            std::string JWT = response_json_.substr(1, response_json_.size() - 2); //THIS EXTRAC THE STRING WITHOUT THE ""
+            session.set_JWT(JWT);
+            return;
+        }
+        
+    }
+    
 }
 
 

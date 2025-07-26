@@ -25,8 +25,8 @@ class server_connection{
   //METHODS
   void perform_simple_GET();
 
-  std::string login(std::string &userName, std::string &userPassword);
-  
+  void login(std::string &userName, std::string &userPassword);
+  void JWT_refresh(std::string cookieId);
 
 
 };
