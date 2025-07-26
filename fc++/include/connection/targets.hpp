@@ -2,11 +2,11 @@
 #define TARGETS_HPP
 #include <iostream>
 #include <string>
-class Targets_to
+class Target_to
 {
- public:
- std::string wellcome = "/";
- std::string loging = "login";
+    public:
+    static std::string wellcome;
+    static std::string loging;
  
 };
 

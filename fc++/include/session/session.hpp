@@ -1,3 +1,5 @@
+#ifndef SESSION_HPP
+#define SESSION_HPP
 #include <cstdlib>
 #include <iostream>
 #include <fstream>
@@ -16,36 +18,51 @@ using std::cout;
 class User_session{
 
     protected:
-        std::string userName;
-        std::string cookieId;
-        std::string JWT;
-        //MAIN HEADER FILE WHERE ALL TARGETS ARE
-        Targets_to target_to;
-
-
+    
     public:
-        explicit User_session();
+    
+    static std::string userName;
+    static std::string cookieId;
+    static std::string JWT;
+    
+    static std::string error_login;
+    static std::string error_cookieId;
+    static std::string error_JWT;
 
+
+    explicit User_session();
         ~User_session();
-
-        void showtest();
 
         //SETTERS
         void set_userName(std::string userName_);
         void set_cookieId(std::string cookieId_);
         void set_JWT(std::string JWT_);
 
+        void error_set_cookieId(std::string err);
+        void error_set_JWT(std::string err);
+
         //GETTERS
         std::string get_userName();
         std::string get_cookieId();
         std::string get_JWT();
 
-
-
-
+        std::string error_get_cookieId();
+        std::string error_get_JWT();
+        
         //METHODS
-        std::string target_discrimination_save(std::string &target_, std::string &response_json_);
+
+        bool error_check_cookieId();
+        bool error_check_JWT();
+
+        void reset_error_cookieId();
+        void reset_error_JWT();
+
+
+
+
+
 
 
 };
 
+#endif

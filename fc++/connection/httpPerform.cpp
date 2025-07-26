@@ -1,15 +1,14 @@
 
 #include <connection/httpPerform.hpp>
 #include <common/certificades.hpp>
-#include <session/session.hpp>
+#include <connection/request_parser.hpp>
+
 
 #include <boost/beast/core.hpp>
 #include <boost/beast/http.hpp>
 #include <boost/beast/version.hpp>
 #include <boost/asio/ssl.hpp>
 #include <boost/asio/strand.hpp>
-
-#include <nlohmann/json.hpp>
 
 #include <cstdlib>
 #include <iostream>
@@ -30,8 +29,13 @@ inline void show_fail(beast::error_code &ec, const char* what)
     std::cout << ec.message() << "  " << what << std::endl;
 }
 
-Connection::Connection(std::string  &host_, std::string &port_, std::string &response_json_) : 
-    host(host_), port(port_), response_json(response_json_), resolver(net::make_strand(ioc)), version(11){ load_root_certificates(ctx); reset_stream();};
+void Connection::start_stream()
+{
+    stream = std::make_shared<ssl::stream<beast::tcp_stream>>(net::make_strand(ioc),ctx);
+}
+
+Connection::Connection(std::string  &host_, std::string &port_) : 
+    host(host_), port(port_), resolver(net::make_strand(ioc)), version(11){ load_root_certificates(ctx); start_stream(); }; //THE RESET_STREAM IS FOR START THE STREAM
 
 Connection::~Connection(){std::cout << "[Connection] destruido correctamente\n";};
 
@@ -47,7 +51,7 @@ void Connection::reset_stream()
         beast::get_lowest_layer(*stream).close(); // Ensure the socket is closed
         stream.reset(); // Release the stream
     }
-    stream = std::make_unique<ssl::stream<beast::tcp_stream>>(net::make_strand(ioc),ctx);
+    stream = std::make_shared<ssl::stream<beast::tcp_stream>>(net::make_strand(ioc),ctx);
     req = {};
     buffer.clear();
     buffer.consume(buffer.size());
@@ -75,6 +79,7 @@ void Connection::cancel_operation()
 //SIMPLE GET
 void Connection::simple_GET(std::string &target)
 {
+    std::cout << "simple_GET\n";
 
     //Set SNI hostname
     if(!SSL_set_tlsext_host_name(stream->native_handle(), host.c_str()))
@@ -102,8 +107,9 @@ void Connection::simple_GET(std::string &target)
     ioc.run();
 }
 
+
 //LOGIN
-void Connection::login(std::string &userName, std::string &userPassword, std::string &target, std::string &cookieId)
+void Connection::login(std::string &userName, std::string &userPassword, std::string &target)
 {
 
     //Set SNI hostname
@@ -117,12 +123,24 @@ void Connection::login(std::string &userName, std::string &userPassword, std::st
             
     stream->set_verify_callback(ssl::host_name_verification(host)); //This set the expected hostname (doamain).
 
+    //JSON_BODY
+    //std::string j_body = Parse_to::login(userName, userPassword);
+
     //This set the GET request message
     req.version(version);
-    req.method(http::verb::get);
-    req.target(target);
+    req.method(http::verb::post);
     req.set(http::field::host, host);
+
+    req.set(http::field::content_type, "application/json");
+
+    req.target(target);
     req.set(http::field::user_agent, BOOST_BEAST_VERSION_STRING);
+
+    req.body() = Parse_to::login(userName, userPassword);
+
+    std::cout << Parse_to::login(userName, userPassword) << "\n";
+
+    req.prepare_payload();
             
     //Look up at the domain name
     resolver.async_resolve(host, port, beast::bind_front_handler(&Connection::on_resolve, shared_from_this()));
@@ -204,8 +222,10 @@ void Connection::on_read(beast::error_code ec, std::size_t bytes_transferred)
         return;
     }
 
-    //response_json = res;
-    std::cout << "RESPONSE" << res.body() << " TARGET " << req.target() << std::endl;
+
+    std::cout << "RESPONSE" << res << " TARGET " << req.target() << std::endl;
+
+    save_controller.target_discrimination_save(req.target(), res.body());
     
     beast::get_lowest_layer(*stream).expires_after(std::chrono::seconds(15));
     //Gracefully close the operation

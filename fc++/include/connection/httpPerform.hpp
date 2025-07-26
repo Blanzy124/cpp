@@ -8,6 +8,7 @@
 #include <boost/asio/strand.hpp>
 
 #include <nlohmann/json.hpp>
+#include <save_controller/save_controller.hpp>
 
 #include <cstdlib>
 #include <iostream>
@@ -28,24 +29,25 @@ inline void show_fail(beast::error_code &ec, const char* what);
 
 class Connection : public std::enable_shared_from_this<Connection>{
     protected:
-        //this is the resonces that comes from server
-        std::string &response_json;
-
         //request specs
         std::string &host;
         std::string &port;
+        
+        //GLOBAL SAVE CONTROLLER
+        Save_controller save_controller;
 
-        //htto version
+
+        //http version
         int version;
 
         //IO CONTEXt
         net::io_context ioc;
+
         //CONTEXT
         ssl::context ctx{ssl::context::tlsv12_client};
 
-        //Target must be set in each request
         //performcHTTP GET
-        http::request<http::empty_body> req;
+        http::request<http::string_body> req;
         http::response<http::string_body> res;
         tcp::resolver resolver;
         std::shared_ptr<ssl::stream<beast::tcp_stream>> stream;
@@ -54,18 +56,18 @@ class Connection : public std::enable_shared_from_this<Connection>{
 
     public:
         //Constructor and destructor
-        explicit Connection(std::string  &host_, std::string &port_, std::string &response_json_); //net::any_io_executor ex, ssl::context &ctx,
+        explicit Connection(std::string  &host_, std::string &port_); //net::any_io_executor ex, ssl::context &ctx,
         ~Connection();
 
         //SETTERS
 
         //METHODS
-        void procces_restart();
+        void start_stream();
+        void reset_stream();
         void cancel_operation();
 
         void simple_GET(std::string &target);
-        void login(std::string &userName, std::string &userPassword, std::string &target, std::string &cookieId);
-        void reset_stream();
+        void login(std::string &userName, std::string &userPassword, std::string &target);
 
         void on_resolve(beast::error_code ec, tcp::resolver::results_type result);
         void on_connect(beast::error_code ec, tcp::resolver::results_type::endpoint_type);

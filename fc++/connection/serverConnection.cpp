@@ -13,28 +13,24 @@
 #include <mutex>
 
 
-server_connection::server_connection() : response_json(""), perform(std::make_shared<Connection>(host, port, response_json))
+server_connection::server_connection() :  perform(std::make_shared<Connection>(host, port))
 {
 };
 
 server_connection::~server_connection(){};
 
-std::string server_connection::get_response_json()
-{
-    return response_json;
-};
-
 void server_connection::perform_simple_GET()
 {
-    perform->simple_GET(target_to.wellcome);
+    std::cout << "perfrim_simple_GET\n";
+    perform->simple_GET(Target_to::wellcome);
 }
 
 
 
 
-std::string server_connection::login(std::string userName, std::string userPassword, std::string &cookieId)
+std::string server_connection::login(std::string &userName, std::string &userPassword)
 {
-    perform->login(userName, userPassword, target_to.loging, cookieId);
+    perform->login(userName, userPassword, Target_to::loging);
     return "gola";
 }
 

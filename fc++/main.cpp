@@ -8,7 +8,6 @@
 #include <chrono>
 
 #include <connection/serverConnection.hpp>
-#include <session/session.hpp>
 
 
 
@@ -16,17 +15,26 @@
 using namespace std;
 using std::cout;
 
+
+
 int main()
 {
+    std::cout << "after option\n";
 
     int option = 999;
     server_connection server;
+
+    User_session session;
+
+    
+
 
 
 
     cout << "Type \"0\" to close\n";
     
-    
+    std::string userName = "SamuelMedinaBlandon";
+    std::string userpassword = "mgee2005";
     
     while(option != 0)
     {
@@ -43,9 +51,21 @@ int main()
             case 1:
             {
                 std::thread t1([&server] () {
-                    server.perform_simple_GET();
+                    std::string userName = "SamuelMedinaBlandon";
+                    std::string userpassword = "mgee2005";
+                    server.login(userName, userpassword);
                 }); 
                 t1.join();
+                std::cout << sizeof(server) << "\n";
+
+                if(session.error_check_cookieId())
+                {
+                    std::cout << session.error_get_cookieId() << "\n";
+                }
+                else
+                {
+                    std::cout << "cookie ID: " << session.get_cookieId() << "\n";
+                }
                 break;
             }
         default:

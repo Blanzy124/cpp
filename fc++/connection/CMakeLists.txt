@@ -1,8 +1,10 @@
 # connection/CMakeLists.txt
 
 set(CONNECTION_SRC
-    httpPerform.cpp
+    targets.cpp
+    request_parser.cpp
     serverConnection.cpp
+    httpPerform.cpp
 )
 
 add_library(connectionLib ${CONNECTION_SRC})
