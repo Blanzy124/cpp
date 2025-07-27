@@ -7,6 +7,9 @@
 #include <boost/asio/ssl.hpp>
 #include <boost/asio/strand.hpp>
 
+#include <boost/beast/websocket.hpp>
+#include <boost/asio/ip/tcp.hpp>
+
 #include <nlohmann/json.hpp>
 #include <save_controller/save_controller.hpp>
 
@@ -21,6 +24,9 @@ namespace http = beast::http;
 namespace net = boost::asio;
 namespace ssl = net::ssl;
 using tcp = net::ip::tcp;
+
+//WEB SOCKED
+namespace websocket = beast::websocket;
 
 using std::cout;
 
@@ -46,12 +52,15 @@ class Connection : public std::enable_shared_from_this<Connection>{
         //CONTEXT
         ssl::context ctx{ssl::context::tlsv12_client};
 
-        //performcHTTP GET
+        //performcHTTP VERBs
         http::request<http::string_body> req;
         http::response<http::string_body> res;
         tcp::resolver resolver;
         std::shared_ptr<ssl::stream<beast::tcp_stream>> stream;
         beast::flat_buffer buffer;
+
+        //WEB SOCKED
+        websocket::stream<tcp::socket> ws{ioc};
         
 
     public:

@@ -8,3 +8,5 @@ std::string Target_to::wellcome = "/";
 std::string Target_to::loging = "/users/login";
 std::string Target_to::JWT_refresh = "/tokens/jwtrefresh";
 
+std::string socket_test = "/foo";
+

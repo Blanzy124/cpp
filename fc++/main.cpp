@@ -32,8 +32,14 @@ int main()
 
     cout << "Type \"0\" to close\n";
     
-    std::string userName = "SamuelMedinaBlandon";
-    std::string userpassword = "mgee2005";
+    std::string userName;
+    std::string userPassword;
+
+    std::cout << "Enter your user name: ";
+    std::getline(std::cin, userName);
+
+    std::cout << "Enter your password: ";
+    std::getline(std::cin, userPassword);
     
     while(option != 0)
     {
@@ -49,8 +55,8 @@ int main()
             break;
             case 1:
             {
-                std::thread t1([&server, &userName, &userpassword] () {
-                    server.login(userName, userpassword);
+                std::thread t1([&server, &userName, &userPassword] () {
+                    server.login(userName, userPassword);
                 }); 
                 t1.join();
                 std::cout << sizeof(server) << "\n";

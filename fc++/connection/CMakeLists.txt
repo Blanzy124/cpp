@@ -5,6 +5,8 @@ set(CONNECTION_SRC
     request_parser.cpp
     serverConnection.cpp
     httpPerform.cpp
+    socketPerform.cpp
+    
 )
 
 add_library(connectionLib ${CONNECTION_SRC})

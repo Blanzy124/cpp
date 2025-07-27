@@ -8,6 +8,8 @@ class Target_to
     static std::string wellcome;
     static std::string loging;
     static std::string JWT_refresh;
+
+	static std::string socket_test;
  
 };
 

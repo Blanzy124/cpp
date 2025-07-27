@@ -22,6 +22,9 @@ namespace net = boost::asio;
 namespace ssl = net::ssl;
 using tcp = net::ip::tcp;
 
+//WEB SOCKED
+namespace websocket = beast::websocket;
+
 using std::cout;
 
 inline void show_fail(beast::error_code &ec, const char* what)
@@ -35,7 +38,7 @@ void Connection::start_stream()
 }
 
 Connection::Connection(std::string  &host_, std::string &port_) : 
-    host(host_), port(port_), resolver(net::make_strand(ioc)), version(11){ load_root_certificates(ctx); start_stream(); }; //THE RESET_STREAM IS FOR START THE STREAM
+    host(host_), port(port_), resolver(net::make_strand(ioc)), version(11){ load_root_certificates(ctx); start_stream();  }; //THE RESET_STREAM IS FOR START THE STREAM
 
 Connection::~Connection(){std::cout << "[Connection] destruido correctamente\n";};
 
@@ -252,7 +255,7 @@ void Connection::on_read(beast::error_code ec, std::size_t bytes_transferred)
     }
 
 
-    std::cout << "RESPONSE" << res.body() << " TARGET " << req.target() << std::endl;
+    //std::cout << "RESPONSE" << res.body() << " TARGET " << req.target() << std::endl;
 
     save_controller.target_discrimination_save(req.target(), res.body());
     
