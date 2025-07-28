@@ -18,7 +18,8 @@ namespace websocket = beast::websocket;
 namespace net = boost::asio;            
 using tcp = net::ip::tcp;
 
-Web_socket::Web_socket(std::string &host_, std::string &port_) : host(host_),  port(port_) { load_root_certificates(ctx); start_ws(); };
+Web_socket::Web_socket(std::string &host_, std::string &port_) : host(host_),  port(port_) {
+	ctx.set_verify_mode(ssl::verify_none); load_root_certificates(ctx); start_ws(); };
 
 Web_socket::~Web_socket(){};
 
@@ -48,20 +49,25 @@ void Web_socket::socket_connection(std::string &from, std::string &to, std::stri
 		auto ep = net::connect(get_lowest_layer(*ws), results);
 	
 		//host += ':' + std::to_string(ep.port()); //BLANZYNETWORK DO NOT REQUIRE THE HOST HEAD WITH PORT (RFC 7230 SECTION 5.4)
+		boost::system::error_code ec;
+		ws->next_layer().handshake(ssl::stream_base::client, ec);
 
-		
-		ws->next_layer().handshake(ssl::stream_base::client);
+		if (ec) {
+            std::cerr << "SSL Handshake failed: " << ec.message() << std::endl;
+            return;
+        }
+
 		ws->set_option(websocket::stream_base::decorator(
 			[&JWT](websocket::request_type& req)
 			{
 				req.set(http::field::user_agent,
 					std::string(BOOST_BEAST_VERSION_STRING) +
-						" websocket-client-coro");
-
-				std::cout << req << "\n";
-			}));
-	
-		std::string full_target = Target_to::socket_test + "?token=" + JWT;
+					" websocket-client-coro");
+					
+					std::cout << req << "\n";
+				}));
+				
+				std::string full_target = Target_to::socket_test + "?token=" + JWT;
 		ws->handshake(host, full_target);
 
 		std::string message_test = "hola desde cpp";

@@ -21,7 +21,7 @@ class Web_socket{
 	std::string &port;
 
 	net::io_context ioc;	
-	ssl::context ctx{ssl::context::tlsv12_client};
+	ssl::context ctx{ssl::context::tls_client};
 
 	tcp::resolver resolver{ioc};	
 	std::shared_ptr<websocket::stream<beast::ssl_stream<tcp::socket>>> ws;

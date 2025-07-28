@@ -27,6 +27,69 @@ namespace websocket = beast::websocket;
 
 using std::cout;
 
+void load_root_certificates_manually(boost::asio::ssl::context& ctx) {
+    // Certificado GTS Root R4 (raíz)
+    const std::string gts_root_r4 =
+        "-----BEGIN CERTIFICATE-----\n"
+        "MIIDejCCAmKgAwIBAgIQf+UwvzMTQ77dghYQST2KGzANBgkqhkiG9w0BAQsFADBX\n"
+        "MQswCQYDVQQGEwJCRTEZMBcGA1UEChMQR2xvYmFsU2lnbiBudi1zYTEQMA4GA1UE\n"
+        "CxMHUm9vdCBDQTEbMBkGA1UEAxMSR2xvYmFsU2lnbiBSb290IENBMB4XDTIzMTEx\n"
+        "NTAzNDMyMVoXDTI4MDEyODAwMDA0MlowRzELMAkGA1UEBhMCVVMxIjAgBgNVBAoT\n"
+        "GUdvb2dsZSBUcnVzdCBTZXJ2aWNlcyBMTEMxFDASBgNVBAMTC0dUUyBSb290IFI0\n"
+        "MHYwEAYHKoZIzj0CAQYFK4EEACIDYgAE83Rzp2iLYK5DuDXFgTB7S0md+8Fhzube\n"
+        "Rr1r1WEYNa5A3XP3iZEwWus87oV8okB2O6nGuEfYKueSkWpz6bFyOZ8pn6KY019e\n"
+        "WIZlD6GEZQbR3IvJx3PIjGov5cSr0R2Ko4H/MIH8MA4GA1UdDwEB/wQEAwIBhjAd\n"
+        "BgNVHSUEFjAUBggrBgEFBQcDAQYIKwYBBQUHAwIwDwYDVR0TAQH/BAUwAwEB/zAd\n"
+        "BgNVHQ4EFgQUgEzW63T/STaj1dj8tT7FavCUHYwwHwYDVR0jBBgwFoAUYHtmGkUN\n"
+        "l8qJUC99BM00qP/8/UswNgYIKwYBBQUHAQEEKjAoMCYGCCsGAQUFBzAChhpodHRw\n"
+        "Oi8vaS5wa2kuZ29vZy9nc3IxLmNydDAtBgNVHR8EJjAkMCKgIKAehhxodHRwOi8v\n"
+        "Yy5wa2kuZ29vZy9yL2dzcjEuY3JsMBMGA1UdIAQMMAowCAYGZ4EMAQIBMA0GCSqG\n"
+        "SIb3DQEBCwUAA4IBAQAYQrsPBtYDh5bjP2OBDwmkoWhIDDkic574y04tfzHpn+cJ\n"
+        "odI2D4SseesQ6bDrarZ7C30ddLibZatoKiws3UL9xnELz4ct92vID24FfVbiI1hY\n"
+        "+SW6FoVHkNeWIP0GCbaM4C6uVdF5dTUsMVs/ZbzNnIdCp5Gxmx5ejvEau8otR/Cs\n"
+        "kGN+hr/W5GvT1tMBjgWKZ1i4//emhA1JG1BbPzoLJQvyEotc03lXjTaCzv8mEbep\n"
+        "8RqZ7a2CPsgRbuvTPBwcOMBBmuFeU88+FSBX6+7iP0il8b4Z0QFqIwwMHfs/L6K1\n"
+        "vepuoxtGzi4CZ68zJpiq1UvSqTbFJjtbD4seiMHl\n"
+        "-----END CERTIFICATE-----\n";
+
+    // Opcional: Certificado intermedio WE1
+    const std::string we1 =
+        "-----BEGIN CERTIFICATE-----\n"
+        "MIICnzCCAiWgAwIBAgIQf/MZd5csIkp2FV0TttaF4zAKBggqhkjOPQQDAzBHMQsw\n"
+        "CQYDVQQGEwJVUzEiMCAGA1UEChMZR29vZ2xlIFRydXN0IFNlcnZpY2VzIExMQzEU\n"
+        "MBIGA1UEAxMLR1RTIFJvb3QgUjQwHhcNMjMxMjEzMDkwMDAwWhcNMjkwMjIwMTQw\n"
+        "MDAwWjA7MQswCQYDVQQGEwJVUzEeMBwGA1UEChMVR29vZ2xlIFRydXN0IFNlcnZp\n"
+        "Y2VzMQwwCgYDVQQDEwNXRTEwWTATBgcqhkjOPQIBBggqhkjOPQMBBwNCAARvzTr+\n"
+        "Z1dHTCEDhUDCR127WEcPQMFcF4XGGTfn1XzthkubgdnXGhOlCgP4mMTG6J7/EFmP\n"
+        "LCaY9eYmJbsPAvpWo4H+MIH7MA4GA1UdDwEB/wQEAwIBhjAdBgNVHSUEFjAUBggr\n"
+        "BgEFBQcDAQYIKwYBBQUHAwIwEgYDVR0TAQH/BAgwBgEB/wIBADAdBgNVHQ4EFgQU\n"
+        "kHeSNWfE/6jMqeZ72YB5e8yT+TgwHwYDVR0jBBgwFoAUgEzW63T/STaj1dj8tT7F\n"
+        "avCUHYwwNAYIKwYBBQUHAQEEKDAmMCQGCCsGAQUFBzAChhhodHRwOi8vaS5wa2ku\n"
+        "Z29oZy9yNC5jcnQwKwYDVR0fBCQwIjAgoB6gHIYaaHR0cDovL2MucGtpLmdvb2cv\n"
+        "ci9yNC5jcmwwEwYDVR0gBAwwCjAIBgZngQwBAgEwCgYIKoZIzj0EAwMDaAAwZQIx\n"
+        "AOcCq1HW90OVznX+0RGU1cxAQXomvtgM8zItPZCuFQ8jSBJSjz5keROv9aYsAm5V\n"
+        "sQIwJonMaAFi54mrfhfoFNZEfuNMSQ6/bIBiNLiyoX46FohQvKeIoJ99cx7sUkFN\n"
+        "7uJW\n"
+        "-----END CERTIFICATE-----\n";
+
+    boost::system::error_code ec;
+    
+    // Cargar el certificado raíz GTS Root R4
+    ctx.add_certificate_authority(
+        boost::asio::buffer(gts_root_r4.data(), gts_root_r4.size()), ec);
+    if (ec) {
+        throw std::runtime_error("Failed to load GTS Root R4: " + ec.message());
+    }
+
+    // Opcional: Cargar el certificado intermedio WE1
+    ctx.add_certificate_authority(
+        boost::asio::buffer(we1.data(), we1.size()), ec);
+    if (ec) {
+        throw std::runtime_error("Failed to load WE1: " + ec.message());
+    }
+}
+
+
 inline void show_fail(beast::error_code &ec, const char* what)
 {
     std::cout << ec.message() << "  " << what << std::endl;
@@ -38,7 +101,11 @@ void Connection::start_stream()
 }
 
 Connection::Connection(std::string  &host_, std::string &port_) : 
-    host(host_), port(port_), resolver(net::make_strand(ioc)), version(11){ load_root_certificates(ctx); start_stream();  }; //THE RESET_STREAM IS FOR START THE STREAM
+    host(host_), port(port_), resolver(net::make_strand(ioc)), version(11){
+		load_root_certificates_manually(ctx);
+		ctx.set_verify_mode(ssl::verify_peer);  
+		start_stream();  
+	}; //THE RESET_STREAM IS FOR START THE STREAM
 
 Connection::~Connection(){std::cout << "[Connection] destruido correctamente\n";};
 
