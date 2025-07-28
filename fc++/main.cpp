@@ -38,6 +38,8 @@ int main()
     std::cout << "Enter your user name: ";
     std::getline(std::cin, userName);
 
+	session.set_userName(userName);
+
     std::cout << "Enter your password: ";
     std::getline(std::cin, userPassword);
     
@@ -55,8 +57,8 @@ int main()
             break;
             case 1:
             {
-                std::thread t1([&server, &userName, &userPassword] () {
-                    server.login(userName, userPassword);
+                std::thread t1([&server, &session, &userPassword] () {
+                    server.login(session.get_userName(), userPassword);
                 }); 
                 t1.join();
                 std::cout << sizeof(server) << "\n";
@@ -87,6 +89,15 @@ int main()
                 }
                 break;
             }
+			case 3:
+			{
+				std::string to_test = "Daniela Blandon";
+                std::thread t1([&server, &session, &to_test] () {
+                    server.simple_web_socket(session.get_userName(), to_test, session.get_JWT());
+                }); 
+                t1.join();
+                break;
+			}
         default:
             cout << "Comand undefined\n";
             break;

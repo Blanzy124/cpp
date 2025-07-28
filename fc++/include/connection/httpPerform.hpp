@@ -60,8 +60,6 @@ class Connection : public std::enable_shared_from_this<Connection>{
         beast::flat_buffer buffer;
 
         //WEB SOCKED
-        websocket::stream<tcp::socket> ws{ioc};
-        
 
     public:
         //Constructor and destructor

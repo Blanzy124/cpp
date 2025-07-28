@@ -2,6 +2,7 @@
 
 #include "connection/httpPerform.hpp"
 #include "connection/targets.hpp"
+#include <connection/socketPerform.hpp>
 
 #include <cstdlib>
 #include <iostream>
@@ -14,6 +15,8 @@ class server_connection{
  protected:
 
  std::shared_ptr<Connection> perform;
+
+ std::shared_ptr<Web_socket> socket_perform;
  
  public:
  
@@ -23,11 +26,16 @@ class server_connection{
 
   
   //METHODS
+ 
+		//HTTPS
   void perform_simple_GET();
 
-  void login(std::string &userName, std::string &userPassword);
+  void login(std::string userName, std::string &userPassword);
+
   void JWT_refresh(std::string cookieId);
 
 
+		//WEB SOCKET
+  void simple_web_socket(std::string from, std::string to, std::string JWT);
 };
 #endif

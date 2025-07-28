@@ -1,6 +1,7 @@
 #include "common/certificades.hpp"
 #include "connection/httpPerform.hpp"
 #include "connection/serverConnection.hpp"
+#include <connection/socketPerform.hpp>
 #include "connection/targets.hpp"
 #include "session/session.hpp"
 #include "config/config.hpp"
@@ -13,7 +14,7 @@
 #include <mutex>
 
 
-server_connection::server_connection() :  perform(std::make_shared<Connection>(host, port))
+server_connection::server_connection() :  perform(std::make_shared<Connection>(host, port)), socket_perform(std::make_shared<Web_socket>(host, port)) 
 {
 };
 
@@ -28,7 +29,7 @@ void server_connection::perform_simple_GET()
 
 
 
-void server_connection::login(std::string &userName, std::string &userPassword)
+void server_connection::login(std::string userName, std::string &userPassword)
 {
     perform->login(userName, userPassword, Target_to::loging);
     return;
@@ -38,6 +39,11 @@ void server_connection::JWT_refresh(std::string cookieId)
 {
     perform->JWT_refresh(cookieId, Target_to::JWT_refresh);
     return;
+}
+
+void server_connection::simple_web_socket(std::string from, std::string to, std::string JWT)
+{
+	socket_perform->socket_connection(from, to, JWT, Target_to::socket_test);
 }
 
 

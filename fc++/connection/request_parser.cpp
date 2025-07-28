@@ -32,5 +32,17 @@ std::string Parse_to::JWT_refresh(std::string &cookieId)
     return j_JWT_refresh_body.dump();
 }
 
+//WEB SOCKET
+
+std::string Parse_to::web_socket_simple_message(std::string &from, std::string &to, std::string &message)
+{
+	json j_simple_socket_message = {
+		{"message", message},
+		{"from", from},
+		{"to", to}
+	};
+	return j_simple_socket_message.dump();
+}
+
 
 
