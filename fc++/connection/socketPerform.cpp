@@ -61,6 +61,7 @@ void Web_socket::socket_connection(std::string &from, std::string &to, std::stri
 		ws->next_layer().set_verify_callback(ssl::host_name_verification(host));
 
 		//host += ':' + std::to_string(ep.port()); //BLANZYNETWORK DO NOT REQUIRE THE HOST HEAD WITH PORT (RFC 7230 SECTION 5.4)
+
 		boost::system::error_code ec;
 		ws->next_layer().handshake(ssl::stream_base::client, ec);
 
@@ -89,14 +90,10 @@ void Web_socket::socket_connection(std::string &from, std::string &to, std::stri
 
 		beast::flat_buffer buffer;
 
-		//while(true)
-		//{
-			ws->read(buffer);
+		ws->read(buffer);
+
+		std::cout << beast::make_printable(buffer.data()) << std::endl;
 	
-			std::cout << beast::make_printable(buffer.data()) << std::endl;
-	
-			buffer.clear();
-		//}
 
 		ws->close(websocket::close_code::normal);
 

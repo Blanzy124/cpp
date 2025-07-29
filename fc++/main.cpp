@@ -77,6 +77,7 @@ int main()
                 std::thread t1([&server, &session] () {
                     server.JWT_refresh(session.get_cookieId());
                 }); 
+				
                 t1.join();
                 if(session.error_check_JWT())
                 {
