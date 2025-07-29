@@ -19,7 +19,6 @@ using std::cout;
 
 int main()
 {
-    std::cout << "after option\n";
 
     int option = 999;
     server_connection server;

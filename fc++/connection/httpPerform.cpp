@@ -102,9 +102,15 @@ void Connection::start_stream()
 
 Connection::Connection(std::string  &host_, std::string &port_) : 
     host(host_), port(port_), resolver(net::make_strand(ioc)), version(11){
-		load_root_certificates_manually(ctx);
-		ctx.set_verify_mode(ssl::verify_peer);  
-		start_stream();  
+        start_stream();  
+        ctx.set_verify_mode(ssl::verify_peer);  
+
+        // Verify the remote server's Hostname or IP address
+        stream->set_verify_callback(
+            net::ssl::host_name_verification(host)
+        );
+
+        load_root_certificates(ctx);
 	}; //THE RESET_STREAM IS FOR START THE STREAM
 
 Connection::~Connection(){std::cout << "[Connection] destruido correctamente\n";};

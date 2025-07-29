@@ -19,7 +19,10 @@ namespace net = boost::asio;
 using tcp = net::ip::tcp;
 
 Web_socket::Web_socket(std::string &host_, std::string &port_) : host(host_),  port(port_) {
-	ctx.set_verify_mode(ssl::verify_none); load_root_certificates(ctx); start_ws(); };
+	start_ws(); 
+	ctx.set_verify_mode(ssl::verify_peer); 
+	load_root_certificates(ctx); 
+};
 
 Web_socket::~Web_socket(){};
 
@@ -47,7 +50,16 @@ void Web_socket::socket_connection(std::string &from, std::string &to, std::stri
 		auto const results = resolver.resolve(host, port);
 		
 		auto ep = net::connect(get_lowest_layer(*ws), results);
+
+        if(! SSL_set_tlsext_host_name(ws->next_layer().native_handle(), host.c_str()))//THIS IS NECESARY FOR PRODUCTION
+        {
+            throw beast::system_error(
+                static_cast<int>(::ERR_get_error()),
+                net::error::get_ssl_category());
+        }
 	
+		ws->next_layer().set_verify_callback(ssl::host_name_verification(host));
+
 		//host += ':' + std::to_string(ep.port()); //BLANZYNETWORK DO NOT REQUIRE THE HOST HEAD WITH PORT (RFC 7230 SECTION 5.4)
 		boost::system::error_code ec;
 		ws->next_layer().handshake(ssl::stream_base::client, ec);
@@ -65,9 +77,10 @@ void Web_socket::socket_connection(std::string &from, std::string &to, std::stri
 					" websocket-client-coro");
 					
 					std::cout << req << "\n";
-				}));
+				}
+			));
 				
-				std::string full_target = Target_to::socket_test + "?token=" + JWT;
+		std::string full_target = Target_to::socket_test + "?token=" + JWT;
 		ws->handshake(host, full_target);
 
 		std::string message_test = "hola desde cpp";
